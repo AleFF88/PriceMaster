@@ -76,7 +76,6 @@ The database must support the efficient execution of the following queries/repor
     * Spent on WorkCost for a certain period
 
 ### 6. Technical Requirements
-* **DBMS:** [SQLite].
 * **DBMS:** **SQLite**. (The database solution for this project will utilize SQLite, primarily due to its lightweight and serverless nature, suitable for initial deployment.)
 * **Backend Technology:** **ASP.NET Core** (initially using the **Minimal API** approach).
 * **Future Planning:** The architecture must allow for a potential seamless migration to a more comprehensive ASP.NET Core framework, such as **ASP.NET Core MVC** (Model-View-Controller) or **Razor Pages**, should the need for increased complexity, structure, or extensive UI logic arise.
