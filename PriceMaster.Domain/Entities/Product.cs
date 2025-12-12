@@ -1,0 +1,17 @@
+﻿namespace CostMaster.Domain.Entities {
+    public class Product {
+        public int ProductId { get; set; }
+        public string? ProductCode { get; set; }
+
+        public int SeriesId { get; set; }
+        public Series? Series { get; set; }
+
+        public decimal SizeWidth { get; set; }
+        public decimal SizeHeight { get; set; }
+        public decimal RecommendedPrice { get; set; }
+        public string? Notes { get; set; }
+
+        public ICollection<BOMItem> BOMItems { get; set; } = [];
+        public ICollection<ProductionHistory> ProductionHistories { get; set; } = [];
+    }
+}
