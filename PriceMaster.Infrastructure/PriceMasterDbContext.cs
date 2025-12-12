@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace PriceMaster.Infrastructure {
-    internal class PriceMasterDbContext : DbContext {
+    public  class PriceMasterDbContext : DbContext {
         public DbSet<Product> Products { get; set; }
         public DbSet<Series> Series { get; set; }
         public DbSet<Unit> Units { get; set; }
