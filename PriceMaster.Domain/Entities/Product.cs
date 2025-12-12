@@ -1,4 +1,4 @@
-﻿namespace CostMaster.Domain.Entities {
+﻿namespace PriceMaster.Domain.Entities {
     public class Product {
         public int ProductId { get; set; }
         public string? ProductCode { get; set; }

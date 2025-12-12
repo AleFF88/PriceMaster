@@ -1,4 +1,4 @@
-﻿namespace CostMaster.Domain.Entities {
+﻿namespace PriceMaster.Domain.Entities {
     public class ProductionHistory {
         public int ProductionHistoryId { get; set; }
 

@@ -1,4 +1,4 @@
-﻿namespace CostMaster.Domain.Entities {
+﻿namespace PriceMaster.Domain.Entities {
     public class BOMItem {          //Bill of Materials
         public int BOMItemId { get; set; }
 
