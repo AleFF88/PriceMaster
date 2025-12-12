@@ -15,4 +15,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.11" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PriceMaster.Domain\PriceMaster.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
