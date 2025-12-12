@@ -1,4 +1,4 @@
-﻿using CostMaster.Domain.Entities;
+﻿using PriceMaster.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace PriceMaster.Infrastructure {
