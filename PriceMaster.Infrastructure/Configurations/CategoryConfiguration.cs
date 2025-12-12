@@ -17,6 +17,12 @@ namespace PriceMaster.Infrastructure.Configurations {
             builder.HasIndex(с => с.CategoryName)
                    .IsUnique();        
 
+            builder.HasData(
+                new Category { CategoryId = 1, CategoryName = "Artifact" },
+                new Category { CategoryId = 2, CategoryName = "BaseMaterial" },
+                new Category { CategoryId = 3, CategoryName = "AssemblyWork" }
+            );
+
             builder.HasMany(category => category.Components)
                    .WithOne(component => component.Category)
                    .HasForeignKey(component => component.CategoryId)

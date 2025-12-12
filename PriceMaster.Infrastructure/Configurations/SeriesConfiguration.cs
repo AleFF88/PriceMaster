@@ -17,6 +17,12 @@ namespace PriceMaster.Infrastructure.Configurations {
             builder.HasIndex(s => s.SeriesName)
                    .IsUnique();
 
+            builder.HasData(
+                new Series { SeriesId = 1, SeriesName = "Cossacks. Birth Of Liberty." },
+                new Series { SeriesId = 2, SeriesName = "UNR 1917-1921. The Ukrainian Liberation truggle." },
+                new Series { SeriesId = 3, SeriesName = "Kyivan Rus. The Golden Legacy." }
+            );
+
             builder.HasMany(series => series.Products)
                    .WithOne(product => product.Series)
                    .HasForeignKey(product => product.SeriesId)
