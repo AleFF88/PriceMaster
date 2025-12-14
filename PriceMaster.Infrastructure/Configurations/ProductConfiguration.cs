@@ -23,7 +23,7 @@ namespace PriceMaster.Infrastructure.Configurations {
                    .IsRequired();
 
             builder.Property(p => p.RecommendedPrice)
-                   .HasColumnType("INTEGER")
+                   .HasColumnType("INTEGER")    // Price in hryvnias, rounded value without kopecks
                    .IsRequired();
 
             builder.HasIndex(p => p.ProductCode)

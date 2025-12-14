@@ -14,15 +14,15 @@ namespace PriceMaster.Infrastructure.Configurations {
                    .IsRequired();
 
             builder.Property(ph => ph.Price)
-                   .HasColumnType("INTEGER")
+                   .HasColumnType("INTEGER")    // Price in hryvnias, rounded value without kopecks
                    .IsRequired();
 
             builder.Property(ph => ph.RecommendedPrice)
-                   .HasColumnType("INTEGER")
+                   .HasColumnType("INTEGER")    // Price in hryvnias, rounded value without kopecks
                    .IsRequired();
 
             builder.Property(ph => ph.WorkCost)
-                   .HasColumnType("INTEGER")
+                   .HasColumnType("INTEGER")    // Price in hryvnias, rounded value without kopecks
                    .IsRequired();
 
             builder.HasOne(productionHistory => productionHistory.Product)

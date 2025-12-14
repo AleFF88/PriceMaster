@@ -18,7 +18,7 @@ namespace PriceMaster.Infrastructure.Configurations {
                    .IsUnique();        
 
             builder.Property(с => с.PricePerUnit)
-                   .HasColumnType("INTEGER")
+                   .HasColumnType("INTEGER")    // Price in hryvnias, rounded value without kopecks
                    .IsRequired();
 
             builder.HasData(
