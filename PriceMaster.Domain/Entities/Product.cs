@@ -1,7 +1,7 @@
 ﻿namespace PriceMaster.Domain.Entities {
     public class Product {
         public int ProductId { get; set; }
-        public string? ProductCode { get; set; }
+        public required string ProductCode { get; set; }
 
         public int SeriesId { get; set; }
         public Series? Series { get; set; }
