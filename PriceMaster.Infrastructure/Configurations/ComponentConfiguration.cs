@@ -15,7 +15,7 @@ namespace PriceMaster.Infrastructure.Configurations {
                    .IsRequired();
 
             builder.HasIndex(с => с.ComponentName)
-                   .IsUnique();        
+                   .IsUnique();
 
             builder.Property(с => с.PricePerUnit)
                    .HasColumnType("INTEGER")    // Price in hryvnias, rounded value without kopecks
@@ -31,8 +31,8 @@ namespace PriceMaster.Infrastructure.Configurations {
                 new Component { ComponentId = 6, ComponentName = "Handle", UnitId = 1, PricePerUnit = 50, CategoryId = 1 },
 
                 // Artifacts, coins
-                new Component { ComponentId = 50, ComponentName = "Copper coin (n3)", UnitId = 1, PricePerUnit = 5, CategoryId = 1 },                               
-                new Component { ComponentId = 51, ComponentName = "Copper coin (n2)", UnitId = 1, PricePerUnit = 10, CategoryId = 1 },                              
+                new Component { ComponentId = 50, ComponentName = "Copper coin (n3)", UnitId = 1, PricePerUnit = 5, CategoryId = 1 },
+                new Component { ComponentId = 51, ComponentName = "Copper coin (n2)", UnitId = 1, PricePerUnit = 10, CategoryId = 1 },
                 new Component { ComponentId = 52, ComponentName = "Copper coin (n1)", UnitId = 1, PricePerUnit = 20, CategoryId = 1 },
                 new Component { ComponentId = 53, ComponentName = "Silver coin (copy)", UnitId = 1, PricePerUnit = 72, CategoryId = 1 },
 
