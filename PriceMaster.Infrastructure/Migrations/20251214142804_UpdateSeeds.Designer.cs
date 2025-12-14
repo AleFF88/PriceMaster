@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PriceMaster.Infrastructure;
 
@@ -10,9 +11,11 @@ using PriceMaster.Infrastructure;
 namespace PriceMaster.Infrastructure.Migrations
 {
     [DbContext(typeof(PriceMasterDbContext))]
-    partial class PriceMasterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251214142804_UpdateSeeds")]
+    partial class UpdateSeeds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.11");
