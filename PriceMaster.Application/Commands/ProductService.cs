@@ -10,9 +10,9 @@ namespace PriceMaster.Application.Commands {
             _productRepository = productRepository;
         }
 
-        public async Task<ProductResultDto> CreateProduct(Product product) {
+        public async Task<ProductResponse> CreateProduct(Product product) {
             if (await _productRepository.Exists(product.ProductCode)) {
-                return new ProductResultDto {
+                return new ProductResponse {
                     Success = false,
                     Message = $"Product with code {product.ProductCode} already exists.",
                     ProductCode = product.ProductCode
@@ -21,7 +21,7 @@ namespace PriceMaster.Application.Commands {
 
             await _productRepository.Add(product);
 
-            return new ProductResultDto {
+            return new ProductResponse {
                 Success = true,
                 Message = $"Product {product.ProductCode} created successfully.",
                 ProductCode = product.ProductCode
