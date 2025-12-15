@@ -10,15 +10,6 @@ namespace PriceMaster.Application.Commands {
             _productRepository = productRepository;
         }
 
-        /// <summary>
-        /// Creates a new product based on the provided request DTO.
-        /// Validates that the product code does not already exist, constructs the product entity
-        /// including BOM items, and saves it to the repository.
-        /// </summary>
-        /// <param name="dto">The request containing product details and BOM items.</param>
-        /// <returns>
-        /// A ProductResponse indicating success or failure, including a message and the product code.
-        /// </returns>
         public async Task<ProductResponse> CreateProduct(CreateProductRequest dto) {
             if (await _productRepository.Exists(dto.ProductCode)) {
                 return new ProductResponse {
@@ -27,8 +18,6 @@ namespace PriceMaster.Application.Commands {
                     ProductCode = dto.ProductCode
                 };
             }
-
-            // TODO create validation
 
             var product = new Product {
                 ProductCode = dto.ProductCode,
