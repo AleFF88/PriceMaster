@@ -30,6 +30,7 @@ namespace PriceMaster.ConsoleApp {
                     SizeWidth = 0.6m,
                     SizeHeight = 0.3m,
                     RecommendedPrice = 2300,
+                    CreatedAt = DateTime.UtcNow,
                     SeriesId = 1
                 };
 

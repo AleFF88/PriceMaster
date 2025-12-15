@@ -9,6 +9,7 @@
         public decimal SizeWidth { get; set; }
         public decimal SizeHeight { get; set; }
         public decimal RecommendedPrice { get; set; }
+        public DateTime CreatedAt { get; set; }
         public string? Notes { get; set; }
 
         public ICollection<BOMItem> BOMItems { get; set; } = [];

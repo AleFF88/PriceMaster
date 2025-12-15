@@ -25,6 +25,10 @@ namespace PriceMaster.Infrastructure.Configurations {
             builder.Property(p => p.RecommendedPrice)
                    .HasColumnType("INTEGER")    // Price in hryvnias, rounded value without kopecks
                    .IsRequired();
+            
+            builder.Property(p => p.CreatedAt)
+                    .HasColumnType("TEXT")
+                    .IsRequired();
 
             builder.HasIndex(p => p.ProductCode)
                    .IsUnique();         // Product Code must be unique 
