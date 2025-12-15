@@ -25,13 +25,27 @@ namespace PriceMaster.ConsoleApp {
                 #region Create Product with ProductCode = "110" for testing purpose
                 var productService = new ProductService(new ProductRepository(context));
 
-                var product = new Product {
+                var product = new Application.DTOs.CreateProductRequest {
                     ProductCode = "110",
-                    SizeWidth = 0.6m,
-                    SizeHeight = 0.3m,
+                    SeriesId = 1,
+                    SizeWidth = 60,
+                    SizeHeight = 30,
                     RecommendedPrice = 2300,
-                    CreatedAt = DateTime.UtcNow,
-                    SeriesId = 1
+
+                    BOMItems = new List<Application.DTOs.BOMItemDto> {
+                            new Application.DTOs.BOMItemDto { ComponentId = 1, Quantity = 4 },   // Button
+                            new Application.DTOs.BOMItemDto { ComponentId = 2, Quantity = 4 },   // Ring
+                            new Application.DTOs.BOMItemDto { ComponentId = 4, Quantity = 8 },   // Harness component (simple)
+                            new Application.DTOs.BOMItemDto { ComponentId = 53, Quantity = 4 },  // Silver coin (copy)
+                            new Application.DTOs.BOMItemDto { ComponentId = 90, Quantity = 3 },  // Spherical ball
+                            new Application.DTOs.BOMItemDto { ComponentId = 110, Quantity = 1 }, // Inkwell
+                            new Application.DTOs.BOMItemDto { ComponentId = 500, Quantity = 1 }, // Baguette 60*30 Verona
+                            new Application.DTOs.BOMItemDto { ComponentId = 900, Quantity = 1 }, // Printout 110
+                            new Application.DTOs.BOMItemDto { ComponentId = 950, Quantity = 1 }, // Hardware
+                            new Application.DTOs.BOMItemDto { ComponentId = 961, Quantity = 0.18m }, // Textile, per sq.m
+                            new Application.DTOs.BOMItemDto { ComponentId = 962, Quantity = 0.18m }, // Polyurethane, per   sq.m
+                            new Application.DTOs.BOMItemDto { ComponentId = 1000, Quantity = 1 }  // Work
+                    }
                 };
 
                 var result = await productService.CreateProduct(product);

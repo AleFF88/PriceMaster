@@ -10,21 +10,38 @@ namespace PriceMaster.Application.Commands {
             _productRepository = productRepository;
         }
 
-        public async Task<ProductResponse> CreateProduct(Product product) {
-            if (await _productRepository.Exists(product.ProductCode)) {
+        public async Task<ProductResponse> CreateProduct(CreateProductRequest dto) {
+            if (await _productRepository.Exists(dto.ProductCode)) {
                 return new ProductResponse {
                     Success = false,
-                    Message = $"Product with code {product.ProductCode} already exists.",
-                    ProductCode = product.ProductCode
+                    Message = $"Product with code {dto.ProductCode} already exists.",
+                    ProductCode = dto.ProductCode
                 };
+            }
+
+            var product = new Product {
+                ProductCode = dto.ProductCode,
+                SeriesId = dto.SeriesId,
+                SizeWidth = dto.SizeWidth,
+                SizeHeight = dto.SizeHeight,
+                RecommendedPrice = dto.RecommendedPrice,
+                Notes = dto.Notes,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            foreach (var item in dto.BOMItems) {
+                product.BOMItems.Add(new BOMItem {
+                    ComponentId = item.ComponentId,
+                    Quantity = item.Quantity
+                });
             }
 
             await _productRepository.Add(product);
 
             return new ProductResponse {
                 Success = true,
-                Message = $"Product {product.ProductCode} created successfully.",
-                ProductCode = product.ProductCode
+                Message = $"Product {dto.ProductCode} created successfully.",
+                ProductCode = dto.ProductCode
             };
         }
     }
