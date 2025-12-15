@@ -43,8 +43,8 @@ namespace PriceMaster.ConsoleApp {
                             new Application.DTOs.BOMItemDto { ComponentId = 900, Quantity = 1 }, // Printout 110
                             new Application.DTOs.BOMItemDto { ComponentId = 950, Quantity = 1 }, // Hardware
                             new Application.DTOs.BOMItemDto { ComponentId = 961, Quantity = 0.18m }, // Textile, per sq.m
-                            new Application.DTOs.BOMItemDto { ComponentId = 962, Quantity = 0.18m }, // Polyurethane, per   sq.m
-                            new Application.DTOs.BOMItemDto { ComponentId = 1000, Quantity = 1 }  // Work
+                            new Application.DTOs.BOMItemDto { ComponentId = 962, Quantity = 0.18m }, // Polyurethane, per sq.m
+                            new Application.DTOs.BOMItemDto { ComponentId = 1000, Quantity = 1 } // Work
                     }
                 };
 
