@@ -20,5 +20,14 @@ namespace PriceMaster.Infrastructure.Repositories {
         public async Task<bool> Exists(string productCode) {
             return await _context.Products.AnyAsync(p => p.ProductCode == productCode);
         }
+
+        /// <inheritdoc />
+        public async Task<Product?> GetByProductCodeWithBomAsync(string productCode) {
+            return await _context.Products
+                .AsNoTracking()
+                .Include(p => p.BOMItems)
+                    .ThenInclude(b => b.Component)
+                .FirstOrDefaultAsync(p => p.ProductCode == productCode);
+        }
     }
 }
