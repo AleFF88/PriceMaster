@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PriceMaster.Application.Commands;
-using PriceMaster.Domain.Entities;
 using PriceMaster.Infrastructure;
 using PriceMaster.Infrastructure.Repositories;
 
