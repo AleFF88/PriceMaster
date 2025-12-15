@@ -51,6 +51,19 @@ namespace PriceMaster.ConsoleApp {
                 var result = await productService.CreateProduct(product);
                 Console.WriteLine(result.Message);
                 #endregion
+
+                #region Save Product with ProductCode = "110" to ProductionHistory for testing purpose
+                var historyService = new ProductionHistoryService(
+                    new ProductRepository(context),
+                    new ProductionHistoryRepository(context)
+                );
+
+                var saveResult = await historyService.AddProductionHistoryEntryAsync("110");
+                Console.WriteLine(saveResult.Message);
+
+                var total = await historyService.GetTotalProductionValueReportAsync();
+                Console.WriteLine($"Total value of all manufactured products (based on recommended price): {total:C}");
+                #endregion
             }
         }
     }
