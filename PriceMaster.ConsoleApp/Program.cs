@@ -13,10 +13,10 @@ namespace PriceMaster.ConsoleApp {
                 .Options;
 
             using (var context = new PriceMasterDbContext(options)) {
-                var pending = context.Database.GetPendingMigrations();
+                var pending = await context.Database.GetPendingMigrationsAsync();
                 if (pending.Any()) {
                     Console.WriteLine($"Apply {pending.Count()} pending migrations.");
-                    context.Database.Migrate();
+                    await context.Database.MigrateAsync();
                     Console.WriteLine("Database created and migrated successfully.");
                 } else {
                     Console.WriteLine($"No pending migrations.");
