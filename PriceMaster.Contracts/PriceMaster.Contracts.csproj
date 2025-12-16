@@ -6,9 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\PriceMaster.Contracts\PriceMaster.Contracts.csproj" />
-    <ProjectReference Include="..\PriceMaster.Domain\PriceMaster.Domain.csproj" />
-  </ItemGroup>
-
 </Project>

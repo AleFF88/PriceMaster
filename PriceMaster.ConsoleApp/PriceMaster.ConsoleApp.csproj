@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PriceMaster.Application\PriceMaster.Application.csproj" />
+    <ProjectReference Include="..\PriceMaster.Contracts\PriceMaster.Contracts.csproj" />
     <ProjectReference Include="..\PriceMaster.Infrastructure\PriceMaster.Infrastructure.csproj" />
   </ItemGroup>
 

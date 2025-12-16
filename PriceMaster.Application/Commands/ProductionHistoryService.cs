@@ -1,4 +1,4 @@
-﻿using PriceMaster.Application.DTOs;
+﻿using PriceMaster.Contracts.DTOs;
 using PriceMaster.Domain.Entities;
 using PriceMaster.Domain.Interfaces;
 
