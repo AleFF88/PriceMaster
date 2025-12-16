@@ -1,6 +1,7 @@
 ﻿using PriceMaster.Contracts.DTOs.ProductionHistory;
 using PriceMaster.Domain.Entities;
 using PriceMaster.Domain.Interfaces;
+using PriceMaster.Domain.Reports;
 
 namespace PriceMaster.Application.Commands {
     public class ProductionHistoryService {
@@ -63,5 +64,22 @@ namespace PriceMaster.Application.Commands {
         public async Task<decimal> GetTotalProductionValueReportAsync() {
             return await _historyRepository.GetTotalProductionValueReportAsync();
         }
+
+        /// <summary>
+        /// Retrieves a detailed production report for a specific product within the given date range.
+        /// If no start or end date is provided, the report covers the entire available history.
+        /// Returns null if no matching records are found.
+        /// </summary>
+        /// <param name="productCode">Unique product code identifying the product.</param> 
+        /// <param name="startDate">Optional start date of the reporting period; if null, uses the earliest available record.</param> 
+        /// <param name="endDate">Optional end date of the reporting period; if null, uses the latest available record.</param> 
+        /// <returns>
+        /// A <see cref="ProductDetailedReport"/> containing aggregated data for the product, 
+        /// or null if no matching records are found. 
+        /// </returns>
+        public async Task<ProductDetailedReport?> GetProductDetailedReportAsync(string productCode, DateTime? startDate = null, DateTime? endDate = null) {
+            return await _historyRepository.GetProductDetailedReportAsync(productCode, startDate, endDate);
+        }
+
     }
 }

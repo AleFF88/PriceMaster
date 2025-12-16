@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PriceMaster.Application.Commands;
 using PriceMaster.Contracts.DTOs.Products;
+using PriceMaster.Contracts.DTOs.Reports;
 using PriceMaster.Infrastructure;
 using PriceMaster.Infrastructure.Repositories;
+using System.Globalization;
 
 namespace PriceMaster.ConsoleApp {
     public static class Program {
@@ -23,6 +25,8 @@ namespace PriceMaster.ConsoleApp {
                     Console.WriteLine($"No pending migrations.");
                     Console.WriteLine();
                 }
+
+                //TODO move this "testing" code to proper Unit Tests project.
 
                 #region Create Product with ProductCode = "110" for testing purpose
                 var productService = new ProductService(new ProductRepository(context));
@@ -61,21 +65,49 @@ namespace PriceMaster.ConsoleApp {
                     new ProductionHistoryRepository(context)
                 );
 
-                var saveResult = await historyService.AddProductionHistoryEntryAsync("110");
-                if (!saveResult.Success) {
-                    Console.WriteLine($"Failed to save production history entry: {saveResult.Message}");
-                    Console.WriteLine();
-                    return;
-                } else {
-                    Console.WriteLine($"{saveResult.Message}");
-                    Console.WriteLine($"Date: {saveResult.CreatedAt:yyyy-MM-dd}, Price: {saveResult.Price:C}, Recommended Price: {saveResult.RecommendedPrice:C}, Work Cost: {saveResult.WorkCost:C}");
-                    Console.WriteLine();
-                }
+                //var saveResult = await historyService.AddProductionHistoryEntryAsync("110");
+                //if (!saveResult.Success) {
+                //    Console.WriteLine($"Failed to save production history entry: {saveResult.Message}");
+                //    Console.WriteLine();
+                //    return;
+                //} else {
+                //    Console.WriteLine($"{saveResult.Message}");
+                //    Console.WriteLine($"Date: {saveResult.CreatedAt:yyyy-MM-dd}, Price: {saveResult.Price:C}, Recommended Price: {saveResult.RecommendedPrice:C}, Work Cost: {saveResult.WorkCost:C}");
+                //    Console.WriteLine();
+                //}
 
                 // Total production value report.
                 var total = await historyService.GetTotalProductionValueReportAsync();
                 Console.WriteLine($"Total value of all manufactured products (based on recommended price): {total:C}");
                 Console.WriteLine();
+
+                // Detailed production value report by specific product code.
+
+                //var report = await historyService.GetProductDetailedReportAsync("110");
+                //var report = await historyService.GetProductDetailedReportAsync("110", startDate: new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+                var report = await historyService.GetProductDetailedReportAsync("110", startDate: new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc), endDate: new DateTime(2025, 1, 31, 0, 0, 0, DateTimeKind.Utc));
+
+                if (report is null) {
+                    Console.WriteLine("No data for the specified product in the selected period.");
+                } else {
+                    // Mapping domain model to DTO ensures architectural consistency
+                    // and prepares code for future UI/WebApi expansion.
+                    var dto = new ProductDetailedReportResponse { 
+                        ProductCode = report.ProductCode, 
+                        Count = report.Count, 
+                        TotalValue = report.TotalValue,
+                        WorkCost = report.WorkCost,
+                        PeriodFrom = report.PeriodFrom, 
+                        PeriodTo = report.PeriodTo 
+                    };
+
+                    Console.WriteLine($"Report for product {dto.ProductCode}"); 
+                    Console.WriteLine($"Period: {dto.PeriodFrom.ToString("yyyy-MMMM-dd", CultureInfo.InvariantCulture)} " +
+                        $"— {dto.PeriodTo.ToString("yyyy-MMMM-dd", CultureInfo.InvariantCulture)}"); 
+                    Console.WriteLine($"Quantity: {dto.Count}"); 
+                    Console.WriteLine($"Total value: {dto.TotalValue:C}");
+                    Console.WriteLine($"Including work cost: {dto.WorkCost:C}"); 
+                }
                 #endregion
             }
         }
