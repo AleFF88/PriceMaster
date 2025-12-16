@@ -1,4 +1,4 @@
-﻿using PriceMaster.Contracts.DTOs;
+﻿using PriceMaster.Contracts.DTOs.Products;
 using PriceMaster.Domain.Entities;
 using PriceMaster.Domain.Interfaces;
 
@@ -17,11 +17,11 @@ namespace PriceMaster.Application.Commands {
         /// </summary>
         /// <param name="dto">The request containing product details and BOM items.</param>
         /// <returns>
-        /// A ProductResponse indicating success or failure, including a message and the product code.
+        /// A CreateProductResponse indicating success or failure, including a message and the product code.
         /// </returns>
-        public async Task<ProductResponse> CreateProduct(CreateProductRequest dto) {
+        public async Task<CreateProductResponse> CreateProduct(CreateProductRequest dto) {
             if (await _productRepository.Exists(dto.ProductCode)) {
-                return new ProductResponse {
+                return new CreateProductResponse {
                     Success = false,
                     Message = $"Product with code {dto.ProductCode} already exists.",
                     ProductCode = dto.ProductCode
@@ -47,7 +47,7 @@ namespace PriceMaster.Application.Commands {
 
             await _productRepository.Add(product);
 
-            return new ProductResponse {
+            return new CreateProductResponse {
                 Success = true,
                 Message = $"Product {dto.ProductCode} created successfully.",
                 ProductCode = dto.ProductCode

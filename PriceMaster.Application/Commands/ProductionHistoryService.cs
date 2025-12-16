@@ -1,4 +1,4 @@
-﻿using PriceMaster.Contracts.DTOs;
+﻿using PriceMaster.Contracts.DTOs.ProductionHistory;
 using PriceMaster.Domain.Entities;
 using PriceMaster.Domain.Interfaces;
 
@@ -20,12 +20,12 @@ namespace PriceMaster.Application.Commands {
         /// <param name="productCode">Unique product code to identify the product.</param>
         /// <param name="notes">Optional notes to append to the history record.</param>
         /// <returns>
-        /// A ProductResponse indicating success or failure, including details of the saved record.
+        /// A AddProductionHistoryResponse indicating success or failure, including details of the saved record.
         /// </returns>
-        public async Task<ProductResponse> AddProductionHistoryEntryAsync(string productCode, string notes = "") {
+        public async Task<AddProductionHistoryResponse> AddProductionHistoryEntryAsync(string productCode, string notes = "") {
             var product = await _productRepository.GetByProductCodeWithBomAsync(productCode);
             if (product is null) {
-                return new ProductResponse { Success = false, Message = $"Product {productCode} not found." };
+                return new AddProductionHistoryResponse { Success = false, Message = $"Product {productCode} not found." };
             }
 
             decimal totalPrice = product.BOMItems.Sum(i => i.Quantity * i.Component!.PricePerUnit);
@@ -43,7 +43,7 @@ namespace PriceMaster.Application.Commands {
 
             await _historyRepository.AddAsync(history);
 
-            return new ProductResponse {
+            return new AddProductionHistoryResponse {
                 Success = true,
                 Message = $"{history.CreatedAt:yyyy-MM-dd} The data is successfully saved. \r\n Product code: {product.ProductCode}, Price: {history.Price:C}, Recommended Price: {product.RecommendedPrice:C}, Work Cost: {history.WorkCost:C}, Notes: {history.Notes}",
                 ProductCode = product.ProductCode

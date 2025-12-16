@@ -1,4 +1,4 @@
-﻿namespace PriceMaster.Contracts.DTOs {
+﻿namespace PriceMaster.Contracts.DTOs.Products {
     public class CreateProductRequest {
         public string ProductCode { get; set; } = string.Empty;
         public int SeriesId { get; set; }
