@@ -28,16 +28,18 @@ namespace PriceMaster.Application.Commands {
                 return new AddProductionHistoryResponse { Success = false, Message = $"Product {productCode} not found." };
             }
 
-            decimal totalPrice = product.BOMItems.Sum(i => i.Quantity * i.Component!.PricePerUnit);
+            var totalPrice = Math.Ceiling(product.BOMItems.Sum(i => i.Quantity * i.Component!.PricePerUnit));
+
+            var workCost = Math.Ceiling(product.BOMItems
+                .Where(i => i.Component!.CategoryId == 3)
+                .Sum(i => i.Quantity * i.Component!.PricePerUnit));
 
             var history = new ProductionHistory {
                 ProductId = product.ProductId,
                 CreatedAt = DateTime.UtcNow,
                 Price = totalPrice,
                 RecommendedPrice = product.RecommendedPrice,
-                WorkCost = product.BOMItems
-                    .Where(i => i.Component!.CategoryId == 3)
-                    .Sum(i => i.Quantity * i.Component!.PricePerUnit),
+                WorkCost = workCost,
                 Notes = notes + product.Notes
             };
 
@@ -45,8 +47,11 @@ namespace PriceMaster.Application.Commands {
 
             return new AddProductionHistoryResponse {
                 Success = true,
-                Message = $"{history.CreatedAt:yyyy-MM-dd} The data is successfully saved. \r\n Product code: {product.ProductCode}, Price: {history.Price:C}, Recommended Price: {product.RecommendedPrice:C}, Work Cost: {history.WorkCost:C}, Notes: {history.Notes}",
-                ProductCode = product.ProductCode
+                Message = $"Product {productCode} is successfully saved.",
+                CreatedAt = history.CreatedAt,
+                Price = history.Price,
+                RecommendedPrice = history.RecommendedPrice,
+                WorkCost = history.WorkCost
             };
         }
 

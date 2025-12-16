@@ -18,8 +18,10 @@ namespace PriceMaster.ConsoleApp {
                     Console.WriteLine($"Apply {pending.Count()} pending migrations.");
                     await context.Database.MigrateAsync();
                     Console.WriteLine("Database created and migrated successfully.");
+                    Console.WriteLine();
                 } else {
                     Console.WriteLine($"No pending migrations.");
+                    Console.WriteLine();
                 }
 
                 #region Create Product with ProductCode = "110" for testing purpose
@@ -50,6 +52,7 @@ namespace PriceMaster.ConsoleApp {
 
                 var result = await productService.CreateProduct(product);
                 Console.WriteLine(result.Message);
+                Console.WriteLine();
                 #endregion
 
                 #region Save Product with ProductCode = "110" to ProductionHistory for testing purpose and test some reports.  
@@ -58,14 +61,21 @@ namespace PriceMaster.ConsoleApp {
                     new ProductionHistoryRepository(context)
                 );
 
-                //var saveResult = await historyService.AddProductionHistoryEntryAsync("110");
-                //Console.WriteLine(saveResult.Message);
+                var saveResult = await historyService.AddProductionHistoryEntryAsync("110");
+                if (!saveResult.Success) {
+                    Console.WriteLine($"Failed to save production history entry: {saveResult.Message}");
+                    Console.WriteLine();
+                    return;
+                } else {
+                    Console.WriteLine($"{saveResult.Message}");
+                    Console.WriteLine($"Date: {saveResult.CreatedAt:yyyy-MM-dd}, Price: {saveResult.Price:C}, Recommended Price: {saveResult.RecommendedPrice:C}, Work Cost: {saveResult.WorkCost:C}");
+                    Console.WriteLine();
+                }
 
                 // Total production value report.
                 var total = await historyService.GetTotalProductionValueReportAsync();
                 Console.WriteLine($"Total value of all manufactured products (based on recommended price): {total:C}");
-
-
+                Console.WriteLine();
                 #endregion
             }
         }
