@@ -1,4 +1,4 @@
-﻿using PriceMaster.Contracts.DTOs.ProductionHistory;
+﻿using PriceMaster.Domain.Common;
 using PriceMaster.Domain.Entities;
 using PriceMaster.Domain.Interfaces;
 using PriceMaster.Domain.Reports;
@@ -20,13 +20,11 @@ namespace PriceMaster.Application.Commands {
         /// </summary>
         /// <param name="productCode">Unique product code to identify the product.</param>
         /// <param name="notes">Optional notes to append to the history record.</param>
-        /// <returns>
-        /// A AddProductionHistoryResponse indicating success or failure, including details of the saved record.
-        /// </returns>
-        public async Task<AddProductionHistoryResponse> AddProductionHistoryEntryAsync(string productCode, string notes = "") {
+        /// <returns>Operation result with success flag and message.</returns>
+        public async Task<OperationResult> AddProductionHistoryEntryAsync(string productCode, string notes = "") {
             var product = await _productRepository.GetByProductCodeWithBomAsync(productCode);
             if (product is null) {
-                return new AddProductionHistoryResponse { Success = false, Message = $"Product {productCode} not found." };
+                return OperationResult.Fail($"Product {productCode} not found.");
             }
 
             var totalPrice = Math.Ceiling(product.BOMItems.Sum(i => i.Quantity * i.Component!.PricePerUnit));
@@ -41,19 +39,12 @@ namespace PriceMaster.Application.Commands {
                 Price = totalPrice,
                 RecommendedPrice = product.RecommendedPrice,
                 WorkCost = workCost,
-                Notes = notes + product.Notes
+                Notes = $"{notes} {product.Notes}".Trim()
             };
 
             await _historyRepository.AddAsync(history);
 
-            return new AddProductionHistoryResponse {
-                Success = true,
-                Message = $"Product {productCode} is successfully saved.",
-                CreatedAt = history.CreatedAt,
-                Price = history.Price,
-                RecommendedPrice = history.RecommendedPrice,
-                WorkCost = history.WorkCost
-            };
+            return OperationResult.Ok($"Product {productCode} is successfully saved to Product Histories. Date: {history.CreatedAt}");
         }
 
         /// <summary>

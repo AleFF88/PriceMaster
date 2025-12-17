@@ -1,4 +1,4 @@
-﻿using PriceMaster.Contracts.DTOs.Products;
+﻿using PriceMaster.Domain.Common;
 using PriceMaster.Domain.Entities;
 using PriceMaster.Domain.Interfaces;
 
@@ -11,47 +11,21 @@ namespace PriceMaster.Application.Commands {
         }
 
         /// <summary>
-        /// Creates a new product based on the provided request DTO.
-        /// Validates that the product code does not already exist, constructs the product entity
-        /// including BOM items, and saves it to the repository.
+        /// Creates a new product in the repository.
+        /// Validates uniqueness of product code and saves the domain entity.
         /// </summary>
-        /// <param name="dto">The request containing product details and BOM items.</param>
-        /// <returns>
-        /// A CreateProductResponse indicating success or failure, including a message and the product code.
-        /// </returns>
-        public async Task<CreateProductResponse> CreateProduct(CreateProductRequest dto) {
-            if (await _productRepository.Exists(dto.ProductCode)) {
-                return new CreateProductResponse {
-                    Success = false,
-                    Message = $"Product with code {dto.ProductCode} already exists.",
-                    ProductCode = dto.ProductCode
-                };
+        /// <param name="product">Domain product entity to create.</param>
+        /// <returns>Operation result with success flag and message.</returns>
+        public async Task<OperationResult> CreateProduct(Product product) {
+            if (await _productRepository.Exists(product.ProductCode)) {
+                return OperationResult.Fail($"Product with code {product.ProductCode} already exists.");
             }
 
-            var product = new Product {
-                ProductCode = dto.ProductCode,
-                SeriesId = dto.SeriesId,
-                SizeWidth = dto.SizeWidth,
-                SizeHeight = dto.SizeHeight,
-                RecommendedPrice = dto.RecommendedPrice,
-                Notes = dto.Notes,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            foreach (var item in dto.BOMItems) {
-                product.BOMItems.Add(new BOMItem {
-                    ComponentId = item.ComponentId,
-                    Quantity = item.Quantity
-                });
-            }
+            product.CreatedAt = DateTime.UtcNow;
 
             await _productRepository.Add(product);
 
-            return new CreateProductResponse {
-                Success = true,
-                Message = $"Product {dto.ProductCode} created successfully.",
-                ProductCode = dto.ProductCode
-            };
+            return OperationResult.Ok($"Product {product.ProductCode} created successfully.");
         }
     }
 }

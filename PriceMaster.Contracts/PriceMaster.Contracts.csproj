@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\Reports\" />
+    <ProjectReference Include="..\PriceMaster.Domain\PriceMaster.Domain.csproj" />
   </ItemGroup>
 
 </Project>
