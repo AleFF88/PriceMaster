@@ -8,7 +8,7 @@ namespace PriceMaster.Domain.Interfaces {
         /// Use this method when creating a new product record.
         /// </summary>
         /// <param name="product">The product entity to add.</param>
-        Task Add(Product product);
+        Task AddAsync(Product product);
 
         /// <summary>
         /// Checks whether a product with the specified unique product code exists in the database.

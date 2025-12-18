@@ -11,7 +11,7 @@ namespace PriceMaster.Infrastructure.Repositories {
         }
 
         /// <inheritdoc />
-        public async Task Add(Product product) {
+        public async Task AddAsync(Product product) {
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
         }

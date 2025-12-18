@@ -23,7 +23,7 @@ namespace PriceMaster.Application.Commands {
 
             product.CreatedAt = DateTime.UtcNow;
 
-            await _productRepository.Add(product);
+            await _productRepository.AddAsync(product);
 
             return OperationResult.Ok($"Product {product.ProductCode} created successfully.");
         }
