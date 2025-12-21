@@ -38,7 +38,7 @@ namespace PriceMaster.Infrastructure.Configurations {
                 .HasForeignKey(product => product.SeriesId)
                 .IsRequired();
 
-            builder.HasMany(product => product.BOMItems)
+            builder.HasMany(product => product.BomItems)
                 .WithOne(bomItem => bomItem.Product)
                 .HasForeignKey(bomItem => bomItem.ProductId)
                 .IsRequired();

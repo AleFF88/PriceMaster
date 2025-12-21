@@ -26,7 +26,7 @@ namespace PriceMaster.IntegrationTests {
             // 1. Arrange
             var request = CreateProduct110Request();    // Incoming payload
             var domain = request.ToDomain();            // Mapping to domain entity
-            var expectedBOMCount = request.BOMItems.Count;
+            var expectedBomCount = request.BomItems.Count;
             var expectedProductCode = request.ProductCode;
 
             // 2. Act
@@ -35,15 +35,15 @@ namespace PriceMaster.IntegrationTests {
             // 3. Assert
             Assert.IsTrue(result.Success, "Product creation should succeed.");
             
-            // Checking the presence of a record in the database with all BOM items
+            // Checking the presence of a record in the database with all BomItems
             ClearChangeTracker(Context);       // Reset the tracker state.
             var productInDb = await Context.Products
-                .Include(p => p.BOMItems)
+                .Include(p => p.BomItems)
                 .FirstOrDefaultAsync(p => p.ProductCode == "110");
 
             Assert.IsNotNull(productInDb, "Product should exist in database.");
             Assert.AreEqual(expectedProductCode, productInDb.ProductCode);
-            Assert.AreEqual(expectedBOMCount, productInDb.BOMItems.Count, "All BOM items should be saved.");
+            Assert.AreEqual(expectedBomCount, productInDb.BomItems.Count, "All BOM (Bill of materials) items should be saved.");
         }
 
         /// <summary>

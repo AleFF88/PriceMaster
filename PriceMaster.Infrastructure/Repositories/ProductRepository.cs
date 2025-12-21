@@ -25,7 +25,7 @@ namespace PriceMaster.Infrastructure.Repositories {
         public async Task<Product?> GetByProductCodeWithBomAsync(string productCode) {
             return await _context.Products
                 .AsNoTracking()
-                .Include(p => p.BOMItems)
+                .Include(p => p.BomItems)
                     .ThenInclude(b => b.Component)
                 .FirstOrDefaultAsync(p => p.ProductCode == productCode);
         }

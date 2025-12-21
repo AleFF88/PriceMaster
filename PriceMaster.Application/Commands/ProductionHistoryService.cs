@@ -15,7 +15,7 @@ namespace PriceMaster.Application.Commands {
 
         /// <summary>
         /// Records a new production history entry for the specified product.
-        /// Retrieves the product by its code with BOM, performs necessary calculations,
+        /// Retrieves the product by its code with Bom (Bill of materials), performs necessary calculations,
         /// and saves the resulting data into the production history.
         /// </summary>
         /// <param name="productCode">Unique product code to identify the product.</param>
@@ -27,9 +27,9 @@ namespace PriceMaster.Application.Commands {
                 return OperationResult.Fail($"Product {productCode} not found.");
             }
 
-            var totalPrice = Math.Ceiling(product.BOMItems.Sum(i => i.Quantity * i.Component!.PricePerUnit));
+            var totalPrice = Math.Ceiling(product.BomItems.Sum(i => i.Quantity * i.Component!.PricePerUnit));
 
-            var workCost = Math.Ceiling(product.BOMItems
+            var workCost = Math.Ceiling(product.BomItems
                 .Where(i => i.Component!.CategoryId == 3)
                 .Sum(i => i.Quantity * i.Component!.PricePerUnit));
 

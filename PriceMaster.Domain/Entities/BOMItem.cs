@@ -1,6 +1,6 @@
 ﻿namespace PriceMaster.Domain.Entities {
-    public class BOMItem {          //Bill of Materials
-        public int BOMItemId { get; set; }
+    public class BomItem {          // Bill of Materials
+        public int BomItemId { get; set; }
 
         public int ProductId { get; set; }
         public Product? Product { get; set; }

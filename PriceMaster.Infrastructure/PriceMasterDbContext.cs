@@ -8,7 +8,7 @@ namespace PriceMaster.Infrastructure {
         public DbSet<Unit> Units { get; set; }
         public DbSet<Component> Components { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<BOMItem> BOMItems { get; set; }
+        public DbSet<BomItem> BomItems { get; set; }
         public DbSet<ProductionHistory> ProductionHistories { get; set; }
 
         public PriceMasterDbContext(DbContextOptions<PriceMasterDbContext> options) : base(options) { }

@@ -11,6 +11,6 @@
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
 
-        public ICollection<BOMItem> BOMItems { get; set; } = [];
+        public ICollection<BomItem> BomItems { get; set; } = [];
     }
 }

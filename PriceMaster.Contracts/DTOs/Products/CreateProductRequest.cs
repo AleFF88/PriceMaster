@@ -7,10 +7,10 @@
         public decimal RecommendedPrice { get; set; }
         public string? Notes { get; set; }
 
-        public List<BOMItemDto> BOMItems { get; set; } = [];
+        public List<BomItemDto> BomItems { get; set; } = [];
     }
 
-    public class BOMItemDto {
+    public class BomItemDto {
         public int ComponentId { get; set; }
         public decimal Quantity { get; set; }
     }

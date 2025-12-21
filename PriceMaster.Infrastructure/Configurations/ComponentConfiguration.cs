@@ -76,7 +76,7 @@ namespace PriceMaster.Infrastructure.Configurations {
                    .HasForeignKey(component => component.UnitId)
                    .IsRequired();
 
-            builder.HasMany(component => component.BOMItems)
+            builder.HasMany(component => component.BomItems)
                    .WithOne(bomItem => bomItem.Component)
                    .HasForeignKey(bomItem => bomItem.ComponentId)
                    .IsRequired();

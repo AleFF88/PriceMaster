@@ -16,7 +16,7 @@ namespace PriceMaster.Contracts.Mappers {
                 RecommendedPrice = request.RecommendedPrice,
                 Notes = request.Notes,
                 CreatedAt = DateTime.UtcNow,
-                BOMItems = request.BOMItems.Select(b => new BOMItem {
+                BomItems = request.BomItems.Select(b => new BomItem {
                     ComponentId = b.ComponentId,
                     Quantity = b.Quantity
                 }).ToList()

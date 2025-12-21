@@ -12,7 +12,7 @@
         public DateTime CreatedAt { get; set; }
         public string? Notes { get; set; }
 
-        public ICollection<BOMItem> BOMItems { get; set; } = [];
+        public ICollection<BomItem> BomItems { get; set; } = [];
         public ICollection<ProductionHistory> ProductionHistories { get; set; } = [];
     }
 }

@@ -19,12 +19,12 @@ namespace PriceMaster.Domain.Interfaces {
         Task<bool> Exists(string productCode);
 
         /// <summary>
-        /// Retrieves a product by its code including BOM items and their components.
+        /// Retrieves a product by its code including BomItems and their components.
         /// The query uses AsNoTracking, meaning the returned entity is not tracked by the DbContext.
         /// Suitable for read-only operations such as calculations or reporting.
         /// </summary>
         /// <param name="productCode">Unique product code.</param>
-        /// <returns>The product with BOM and components, or null if not found.</returns>
+        /// <returns>The product with BOM (Bill of materials) and components, or null if not found.</returns>
         Task<Product?> GetByProductCodeWithBomAsync(string productCode);
     }
 }
