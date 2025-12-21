@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PriceMaster.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialCreate21122025 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -63,6 +63,7 @@ namespace PriceMaster.Infrastructure.Migrations
                     SizeWidth = table.Column<decimal>(type: "INTEGER", nullable: false),
                     SizeHeight = table.Column<decimal>(type: "INTEGER", nullable: false),
                     RecommendedPrice = table.Column<decimal>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Notes = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -129,10 +130,10 @@ namespace PriceMaster.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BOMItems",
+                name: "BomItems",
                 columns: table => new
                 {
-                    BOMItemId = table.Column<int>(type: "INTEGER", nullable: false)
+                    BomItemId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ProductId = table.Column<int>(type: "INTEGER", nullable: false),
                     ComponentId = table.Column<int>(type: "INTEGER", nullable: false),
@@ -140,15 +141,15 @@ namespace PriceMaster.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BOMItems", x => x.BOMItemId);
+                    table.PrimaryKey("PK_BomItems", x => x.BomItemId);
                     table.ForeignKey(
-                        name: "FK_BOMItems_Components_ComponentId",
+                        name: "FK_BomItems_Components_ComponentId",
                         column: x => x.ComponentId,
                         principalTable: "Components",
                         principalColumn: "ComponentId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BOMItems_Products_ProductId",
+                        name: "FK_BomItems_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "ProductId",
@@ -171,7 +172,7 @@ namespace PriceMaster.Infrastructure.Migrations
                 values: new object[,]
                 {
                     { 1, "Cossacks. Birth Of Liberty." },
-                    { 2, "UNR 1917-1921. The Ukrainian Liberation truggle." },
+                    { 2, "UNR 1917-1921. The Ukrainian Liberation struggle." },
                     { 3, "Kyivan Rus. The Golden Legacy." }
                 });
 
@@ -195,9 +196,9 @@ namespace PriceMaster.Infrastructure.Migrations
                     { 4, 1, "Harness Component (simple)", 10m, 1 },
                     { 5, 1, "Harness Component (stars)", 20m, 1 },
                     { 6, 1, "Handle", 50m, 1 },
-                    { 50, 1, "Cooper coin (n3)", 5m, 1 },
-                    { 51, 1, "Cooper coin (n2)", 10m, 1 },
-                    { 52, 1, "Cooper coin (n1)", 20m, 1 },
+                    { 50, 1, "Copper coin (n3)", 5m, 1 },
+                    { 51, 1, "Copper coin (n2)", 10m, 1 },
+                    { 52, 1, "Copper coin (n1)", 20m, 1 },
                     { 53, 1, "Silver coin (copy)", 72m, 1 },
                     { 90, 1, "Spherical ball", 5m, 1 },
                     { 110, 1, "Inkwell", 30m, 1 },
@@ -213,13 +214,13 @@ namespace PriceMaster.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BOMItems_ComponentId",
-                table: "BOMItems",
+                name: "IX_BomItems_ComponentId",
+                table: "BomItems",
                 column: "ComponentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BOMItems_ProductId",
-                table: "BOMItems",
+                name: "IX_BomItems_ProductId",
+                table: "BomItems",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
@@ -277,7 +278,7 @@ namespace PriceMaster.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BOMItems");
+                name: "BomItems");
 
             migrationBuilder.DropTable(
                 name: "ProductionHistories");
