@@ -17,9 +17,9 @@ namespace PriceMaster.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.11");
 
-            modelBuilder.Entity("PriceMaster.Domain.Entities.BOMItem", b =>
+            modelBuilder.Entity("PriceMaster.Domain.Entities.BomItem", b =>
                 {
-                    b.Property<int>("BOMItemId")
+                    b.Property<int>("BomItemId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -32,13 +32,13 @@ namespace PriceMaster.Infrastructure.Migrations
                     b.Property<decimal>("Quantity")
                         .HasColumnType("REAL");
 
-                    b.HasKey("BOMItemId");
+                    b.HasKey("BomItemId");
 
                     b.HasIndex("ComponentId");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("BOMItems", (string)null);
+                    b.ToTable("BomItems", (string)null);
                 });
 
             modelBuilder.Entity("PriceMaster.Domain.Entities.Category", b =>
@@ -416,16 +416,16 @@ namespace PriceMaster.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PriceMaster.Domain.Entities.BOMItem", b =>
+            modelBuilder.Entity("PriceMaster.Domain.Entities.BomItem", b =>
                 {
                     b.HasOne("PriceMaster.Domain.Entities.Component", "Component")
-                        .WithMany("BOMItems")
+                        .WithMany("BomItems")
                         .HasForeignKey("ComponentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("PriceMaster.Domain.Entities.Product", "Product")
-                        .WithMany("BOMItems")
+                        .WithMany("BomItems")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -483,12 +483,12 @@ namespace PriceMaster.Infrastructure.Migrations
 
             modelBuilder.Entity("PriceMaster.Domain.Entities.Component", b =>
                 {
-                    b.Navigation("BOMItems");
+                    b.Navigation("BomItems");
                 });
 
             modelBuilder.Entity("PriceMaster.Domain.Entities.Product", b =>
                 {
-                    b.Navigation("BOMItems");
+                    b.Navigation("BomItems");
 
                     b.Navigation("ProductionHistories");
                 });
