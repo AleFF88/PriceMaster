@@ -1,7 +1,7 @@
 ﻿using PriceMaster.Domain.Reports;
 
 namespace PriceMaster.Domain.Interfaces {
-    internal interface IProductionHistoryQueries {
+    public interface IProductionHistoryQueries {
 
         /// <summary>
         /// Calculates the total value of all manufactured products
