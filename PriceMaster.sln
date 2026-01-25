@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36623.8 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E7C2520C-C639-4952-BA8F-943C87EE14BE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{90E9E36C-B60E-45AE-81B7-79A97FF093DC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PriceMaster.Domain", "PriceMaster.Domain", "{C383C8D4-6654-4508-991C-B9BA1542B0FB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Entities", "Entities", "{F16AD6CD-3908-43AD-B28F-1961445FEF3D}"
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C383C8D4-6654-4508-991C-B9BA1542B0FB} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{F16AD6CD-3908-43AD-B28F-1961445FEF3D} = {C383C8D4-6654-4508-991C-B9BA1542B0FB}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {78D29B25-10DA-49CB-9FEB-0AF18B1CE797}
+	EndGlobalSection
+EndGlobal
