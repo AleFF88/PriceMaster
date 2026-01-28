@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PriceMaster.Application.DTOs;
 using PriceMaster.Application.Services;
 using PriceMaster.Infrastructure.Repositories;
 
@@ -34,9 +33,11 @@ namespace PriceMaster.IntegrationTests {
             await _productService.CreateProductAsync(dto);
 
             // 3. Assert 
+            IntegrationTestHelper.ClearChangeTracker(Context);       // Reset the tracker state.
             var productInDb = await Context.Products
-                 .Include(p => p.BomItems)
-                 .FirstOrDefaultAsync(p => p.ProductCode == expectedProductCode);
+                .AsNoTracking()
+                .Include(p => p.BomItems)
+                .FirstOrDefaultAsync(p => p.ProductCode == expectedProductCode);
 
             Assert.IsNotNull(productInDb, $"Product with code {expectedProductCode} must be in the database.");
             Assert.AreEqual(expectedSizeWidth, productInDb.SizeWidth);
@@ -63,6 +64,7 @@ namespace PriceMaster.IntegrationTests {
             // 3. Assert
             // Verify that attempting to create a product with the same code 
             // throws an InvalidOperationException as defined in the business logic.
+            IntegrationTestHelper.ClearChangeTracker(Context);       // Reset the tracker state.
             await Assert.ThrowsExceptionAsync<InvalidOperationException>(action,
                 "An exception should be thrown when attempting to create a duplicate product code.");
         }
