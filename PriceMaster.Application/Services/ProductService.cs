@@ -20,6 +20,8 @@ namespace PriceMaster.Application.Services {
             var product = new Product {
                 ProductCode = dto.ProductCode,
                 SeriesId = dto.SeriesId,
+                SizeWidth = dto.SizeWidth,
+                SizeHeight = dto.SizeHeight,
                 RecommendedPrice = dto.RecommendedPrice,
                 CreatedAt = DateTime.UtcNow,
                 BomItems = dto.BomItems.Select(b => new BomItem {
