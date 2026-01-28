@@ -37,6 +37,7 @@ namespace PriceMaster.IntegrationTests {
             var productInDb = await Context.Products
                 .AsNoTracking()
                 .Include(p => p.BomItems)
+                    .ThenInclude(b => b.Component)
                 .FirstOrDefaultAsync(p => p.ProductCode == expectedProductCode);
 
             Assert.IsNotNull(productInDb, $"Product with code {expectedProductCode} must be in the database.");
