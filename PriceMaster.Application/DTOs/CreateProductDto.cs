@@ -1,11 +1,11 @@
 ﻿namespace PriceMaster.Application.DTOs {
     public record CreateProductDto {
-        public string ProductCode { get; init; }
+        public required string ProductCode { get; init; }
         public int SeriesId { get; init; }
         public decimal SizeWidth { get; init; }
         public decimal SizeHeight { get; init; }
         public decimal RecommendedPrice { get; init; }
-        public List<BomItemDto> BomItems { get; init; }
+        public required List<BomItemDto> BomItems { get; init; }
     }
 
     public record BomItemDto {
