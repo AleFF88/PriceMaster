@@ -16,6 +16,11 @@ namespace PriceMaster.IntegrationTests {
             _productService = new ProductService(repository);
         }
 
+        /// <summary>
+        /// Validates that a new product with valid data (Code 110) is successfully created.
+        /// Verifies that the service processes the request without errors and persists the entity 
+        /// to the database with BOM (Bill of materials).
+        /// </summary>
         [TestMethod]
         public async Task CreateProduct_FullComplexBOM_ShouldSaveCorrectly() {
             // 1. Arrange 
@@ -40,6 +45,10 @@ namespace PriceMaster.IntegrationTests {
             Assert.AreEqual(expectedBomCount, productInDb.BomItems.Count, $"The number of positions in the BOM must be {expectedBomCount}.");
         }
 
+        /// <summary>
+        /// Verifies that the system prevents creating a product with a code that already exists.
+        /// The ProductCode must be unique across the entire database to ensure data integrity.
+        /// </summary>
         [TestMethod]
         public async Task CreateProduct_DuplicateCode_ShouldThrowException() {
             // 1. Arrange
