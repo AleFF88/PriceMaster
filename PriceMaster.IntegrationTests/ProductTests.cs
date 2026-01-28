@@ -7,7 +7,7 @@ namespace PriceMaster.IntegrationTests {
 
     [TestClass]
     public class ProductTests : IntegrationTestBase {
-        private ProductService _productService;
+        private ProductService _productService = null!;
 
         [TestInitialize]
         public void TestInit() {
