@@ -7,19 +7,16 @@ using PriceMaster.Infrastructure;
 namespace PriceMaster.ConsoleApp {
     internal static class Program {
         static void Main(string[] args) {
-            // Создаем "хост" приложения (это стандартный способ в современном .NET)
             var builder = Host.CreateApplicationBuilder(args);
 
-            // ВЫЗОВ НАШЕГО МЕТОДА
             builder.Services.AddInfrastructure(options =>
                 options.UseSqlite("Data Source=pricemaster.db"));
 
             using IHost host = builder.Build();
 
-            // ТЕПЕРЬ МАГИЯ: Мы не пишем new ProductRepository...
-            // Мы просим сервис у контейнера:
             var repo = host.Services.GetRequiredService<IProductRepository>();
 
+            Console.WriteLine($"Path to the database file: {Path.GetFullPath("pricemaster.db")}");
         }
     }
 }
