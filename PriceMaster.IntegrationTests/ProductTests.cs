@@ -44,6 +44,8 @@ namespace PriceMaster.IntegrationTests {
             Assert.AreEqual(expectedSizeHeight, productInDb.SizeHeight);
             Assert.AreEqual(dto.RecommendedPrice, productInDb.RecommendedPrice);
             Assert.AreEqual(expectedBomCount, productInDb.BomItems.Count, $"The number of positions in the BOM must be {expectedBomCount}.");
+            Assert.IsTrue(productInDb.BomItems.All(b => b.Component != null), "All components must be loaded.");
+            Assert.IsTrue(productInDb.BomItems.Any(b => b.Component!.PricePerUnit> 0), "Components must have prices from seed data.");
         }
 
         /// <summary>
