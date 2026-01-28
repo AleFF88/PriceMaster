@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceMaster.Infrastructure"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceMaster.ConsoleApp", "PriceMaster.ConsoleApp\PriceMaster.ConsoleApp.csproj", "{0DA7DF57-19FD-4A5E-AD2E-272BC7983909}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceMaster.Application", "PriceMaster.Application\PriceMaster.Application.csproj", "{18915F1E-9BB0-4565-8E67-9A2A7D819D45}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{0DA7DF57-19FD-4A5E-AD2E-272BC7983909}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DA7DF57-19FD-4A5E-AD2E-272BC7983909}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DA7DF57-19FD-4A5E-AD2E-272BC7983909}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18915F1E-9BB0-4565-8E67-9A2A7D819D45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18915F1E-9BB0-4565-8E67-9A2A7D819D45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18915F1E-9BB0-4565-8E67-9A2A7D819D45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18915F1E-9BB0-4565-8E67-9A2A7D819D45}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -40,6 +46,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{213B92ED-0609-4DFD-9B22-B3B53D13E703} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{ABFB7A9C-AA3E-47C7-B169-5460B37EAF1E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{0DA7DF57-19FD-4A5E-AD2E-272BC7983909} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{18915F1E-9BB0-4565-8E67-9A2A7D819D45} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {78D29B25-10DA-49CB-9FEB-0AF18B1CE797}
