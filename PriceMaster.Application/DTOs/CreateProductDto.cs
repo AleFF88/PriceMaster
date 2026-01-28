@@ -1,5 +1,15 @@
 ﻿namespace PriceMaster.Application.DTOs {
-    public record CreateProductDto(string ProductCode, int SeriesId, decimal RecommendedPrice, List<BomItemDto> BomItems);
+    public record CreateProductDto {
+        public string ProductCode { get; init; }
+        public int SeriesId { get; init; }
+        public decimal SizeWidth { get; init; }
+        public decimal SizeHeight { get; init; }
+        public decimal RecommendedPrice { get; init; }
+        public List<BomItemDto> BomItems { get; init; }
+    }
 
-    public record BomItemDto(int ComponentId, decimal Quantity);
+    public record BomItemDto {
+        public int ComponentId { get; init; }
+        public decimal Quantity { get; init; }
+    };
 }
