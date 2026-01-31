@@ -11,6 +11,13 @@ namespace PriceMaster.Application.Services {
             _productRepository = productRepository;
         }
 
+        /// <summary>
+        /// Creates a new product in the system based on the provided data.
+        /// Includes storing basic product information and its bill of materials (BOM).
+        /// </summary>
+        /// <param name="dto">A data transfer object containing product parameters and a list of components.</param>
+        /// <returns>A task representing the asynchronous create operation.</returns>
+
         public async Task CreateProductAsync(CreateProductDto dto) {
             // Check for duplicates (business rule)
             if (await _productRepository.Exists(dto.ProductCode))
