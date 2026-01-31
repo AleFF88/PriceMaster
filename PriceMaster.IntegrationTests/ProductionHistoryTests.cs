@@ -136,5 +136,30 @@ namespace PriceMaster.IntegrationTests {
             Assert.IsFalse(filteredInDb.Any(e => e.Notes != null && e.Notes.Contains("Out-of-range")),
                 "'Out-of-range' records should not be included in the sample for the period.");
         }
+
+        /// <summary>
+        /// Verifies that the system handles requests for periods with no data gracefully.
+        /// To run this test, the product must exist in the database, but have no associated 
+        ///    history records within the specified date range.
+        /// </summary>
+        [TestMethod]
+        public async Task GetProductDetailedReport_WithNoEntriesInRange_ShouldReturnNull() {
+            // 1. Arrange
+            // Ensure the product exists so the query doesn't fail on "Product Not Found" logic
+            var dto = TestDataFactory.CreateProduct110Request();
+            await _productService.CreateProductAsync(dto);
+
+            // Define a date range in the past where we definitely have no data
+            var startDate = DateTime.UtcNow.AddYears(-10);
+            var endDate = DateTime.UtcNow.AddYears(-9);
+            var productCode = dto.ProductCode;
+
+            // 2. Act
+            var report = await _historyService.GetProductDetailedReportAsync(productCode, startDate, endDate);
+
+            // 3. Assert
+            // If the query returns null for empty results, we verify that here
+            Assert.IsNull(report, $"Report for product {productCode} should be null for a historical range with no data.");
+        }
     }
 }
