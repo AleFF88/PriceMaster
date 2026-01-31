@@ -40,13 +40,19 @@ namespace PriceMaster.Application.Services {
                 }).ToList()
             };
 
-            await _productRepository.AddAsync(product);
-
-
-            return new ServiceResult {
-                IsSuccess = true,
-                Message = string.Empty
-            };
+            try {
+                await _productRepository.AddAsync(product);
+                return new ServiceResult {
+                    IsSuccess = true,
+                    Message = string.Empty
+                };
+            }
+            catch (Exception ex) {
+                return new ServiceResult {
+                    IsSuccess = false,
+                    Message = $"An error occurred while creating the product: {ex.Message}"
+                };
+            }
         }
     }
 }
