@@ -29,10 +29,7 @@ namespace PriceMaster.Application.Services {
                 var product = await _productRepository.GetByProductCodeWithBomAsync(request.ProductCode);
 
                 if (product == null) {
-                    return new ServiceResult {
-                        IsSuccess = false,
-                        Message = $"Product with code {request.ProductCode} not found."
-                    };
+                    return ServiceResult.Failure($"Product with code {request.ProductCode} not found.");
                 }
 
                 var totalPrice = Math.Ceiling(product.BomItems.Sum(i => i.Quantity * i.Component!.PricePerUnit));
@@ -51,17 +48,10 @@ namespace PriceMaster.Application.Services {
                 };
 
                 await _historyRepository.AddAsync(historyEntry);
-
-                return new ServiceResult {
-                    IsSuccess = true,
-                    Message = "Production record created successfully."
-                };
+                return ServiceResult.Success();
             }
             catch (Exception ex) {
-                return new ServiceResult {
-                    IsSuccess = false,
-                    Message = $"Internal error: {ex.Message}"
-                };
+                return ServiceResult.Failure($"Internal error: {ex.Message}");
             }
         }
 

@@ -20,10 +20,7 @@ namespace PriceMaster.Application.Services {
         public async Task<ServiceResult> CreateProductAsync(CreateProductDto dto) {
             // Check for duplicates (business rule)
             if (await _productRepository.Exists(dto.ProductCode)) {
-                return new ServiceResult {
-                    IsSuccess = false,
-                    Message = $"Product with code {dto.ProductCode} already exists."
-                };
+                return ServiceResult.Failure($"Product with code {dto.ProductCode} already exists.");
             }
 
             // Mapping DTO -> Entity
@@ -42,16 +39,10 @@ namespace PriceMaster.Application.Services {
 
             try {
                 await _productRepository.AddAsync(product);
-                return new ServiceResult {
-                    IsSuccess = true,
-                    Message = string.Empty
-                };
+                return ServiceResult.Success();
             }
             catch (Exception ex) {
-                return new ServiceResult {
-                    IsSuccess = false,
-                    Message = $"An error occurred while creating the product: {ex.Message}"
-                };
+                return ServiceResult.Failure($"An error occurred while creating the product: {ex.Message}");
             }
         }
     }
