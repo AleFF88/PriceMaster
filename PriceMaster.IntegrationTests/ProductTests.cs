@@ -60,16 +60,24 @@ namespace PriceMaster.IntegrationTests {
             var dto = TestDataFactory.CreateProduct110Request();
             await _productService.CreateProductAsync(dto);
 
+            var expectedErrorMessage = $"Product with code {dto.ProductCode} already exists.";
+            var expectedNumberOfRecords = 1;
+
             // 2. Act
-            // Define the action that is expected to fail
-            Func<Task> action = () => _productService.CreateProductAsync(dto);
+            // Trying to create the same product. This action is expected to fail.
+            IntegrationTestHelper.ClearChangeTracker(Context); 
+            var result = await _productService.CreateProductAsync(dto);
 
             // 3. Assert
-            // Verify that attempting to create a product with the same code 
-            // throws an InvalidOperationException as defined in the business logic.
-            IntegrationTestHelper.ClearChangeTracker(Context);       // Reset the tracker state.
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(action,
-                "An exception should be thrown when attempting to create a duplicate product code.");
+            // Check that the operation result is negative.
+            Assert.IsFalse(result.IsSuccess, "Result should indicate failure for duplicate product code.");
+
+            // Проверяем, что вернулось именно наше сообщение об ошибке
+            Assert.AreEqual(expectedErrorMessage, result.Message);
+
+            // Additionally: check that there is still only one product with this code in the database
+            var count = await Context.Products.CountAsync(p => p.ProductCode == dto.ProductCode);
+            Assert.AreEqual(expectedNumberOfRecords, count, "Database should still contain only one instance of the product.");
         }
     }
 }
