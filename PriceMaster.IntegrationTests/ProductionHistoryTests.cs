@@ -161,5 +161,47 @@ namespace PriceMaster.IntegrationTests {
             // If the query returns null for empty results, we verify that here
             Assert.IsNull(report, $"Report for product {productCode} should be null for a historical range with no data.");
         }
+
+        /// <summary>
+        /// Verifies that a history record captures and persists the correct 
+        ///    product price at the moment of creation.
+        /// This is crucial for financial integrity, ensuring historical reports 
+        ///    remain accurate even if product prices change later.
+        /// </summary>
+        [TestMethod]
+        public async Task AddProductionHistoryEntry_ShouldPersistCurrentProductPrice() {
+            // 1. Arrange
+            // Seed the base product '110' into the in-memory database
+            var dto = TestDataFactory.CreateProduct110Request();
+            await _productService.CreateProductAsync(dto);
+            
+            var expectedPrice = dto.RecommendedPrice;
+            var expectedNote = "Snapshot Price Verification";
+
+
+            var request = new ProductionHistoryCreateRequest {
+                ProductCode = dto.ProductCode,
+                ProductionDate = DateTime.UtcNow,
+                Notes = expectedNote
+            };
+
+            // 2. Act
+            // Using the service which now returns a ServiceResult
+            var result = await _historyService.AddProductionHistoryEntryAsync(request);
+            IntegrationTestHelper.ClearChangeTracker(Context);
+
+            // 3. Assert
+            Assert.IsTrue(result.IsSuccess, $"Service failed to create entry: {result.Message}");
+
+            // Fetch the created record directly from the DB to check the persisted price
+            var persistedEntry = await Context.ProductionHistories
+                .FirstOrDefaultAsync(h => h.Notes != null && h.Notes.Contains(expectedNote));
+
+            Assert.IsNotNull(persistedEntry, "The history entry was not found in the database.");
+            Assert.AreEqual(expectedPrice, persistedEntry.RecommendedPrice,
+                "The history entry failed to capture the product's recommended price at the moment of creation.");
+        }
+
+
     }
 }
