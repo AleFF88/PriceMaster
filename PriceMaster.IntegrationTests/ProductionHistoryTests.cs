@@ -130,10 +130,10 @@ namespace PriceMaster.IntegrationTests {
             Assert.AreEqual(expectedCountInRange, filteredInDb.Count, $"There must be exactly {expectedCountInRange} entries within the range.");
 
             // Verify that the correct entries were picked by checking their notes
-            Assert.IsTrue(filteredInDb.All(e => e.Notes.Contains("In-Range")),
+            Assert.IsTrue(filteredInDb.All(e => e.Notes != null && e.Notes.Contains("In-Range")),
                 "All records within a period must be labeled 'In-Range'.");
 
-            Assert.IsFalse(filteredInDb.Any(e => e.Notes.Contains("Out-of-range")),
+            Assert.IsFalse(filteredInDb.Any(e => e.Notes != null && e.Notes.Contains("Out-of-range")),
                 "'Out-of-range' records should not be included in the sample for the period.");
         }
     }
