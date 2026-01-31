@@ -8,6 +8,7 @@ namespace PriceMaster.Application {
 
             // SERVICES
             services.AddScoped<ProductService>();
+            services.AddScoped<ProductionHistoryService>();
 
             return services;
         }
