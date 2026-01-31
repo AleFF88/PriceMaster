@@ -1,0 +1,140 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PriceMaster.Application.DTOs;
+using PriceMaster.Application.Services;
+using PriceMaster.Domain.Interfaces;
+using PriceMaster.Infrastructure.Repositories;
+using System;
+using System.Threading.Tasks;
+
+// Using static imports to access helper methods directly from the same namespace
+using static PriceMaster.IntegrationTests.IntegrationTestHelper;
+using static PriceMaster.IntegrationTests.TestDataFactory;
+
+namespace PriceMaster.IntegrationTests {
+    /// <summary>
+    /// Integration tests for the production history logic and reporting.
+    /// These tests verify that production events are recorded with correct prices 
+    /// and that reports aggregate data accurately over time.
+    /// </summary>
+    [TestClass]
+    public sealed class ProductionHistoryTests : IntegrationTestBase {
+        private ProductionHistoryService _historyService = null!;
+        private ProductService _productService = null!;
+
+        [TestInitialize]
+        public void TestInit() {
+            // Initializing repositories and service for each test
+            var productRepo = new ProductRepository(Context);
+            var historyRepo = new ProductionHistoryRepository(Context);
+            var historyQueries = new ProductionHistoryQueries(Context);
+
+            _historyService = new ProductionHistoryService(productRepo, historyRepo, historyQueries);
+            _productService = new ProductService(productRepo);
+
+        }
+
+        /// <summary>
+        /// Summary: Verifies that the detailed report correctly aggregates data and filters records by date range.
+        /// Description: Adds multiple production records (including boundaries and out-of-range entries) 
+        /// to ensure that the report sums only valid entries and that data integrity is maintained in the database.
+        /// </summary>
+        [TestMethod]
+        public async Task GetProductDetailedReport_DateFiltering_ShouldReturnExpectedRecordsAndValues() {
+            // 1. Arrange
+            // Seed the base product '110' into the in-memory database
+            var dto = TestDataFactory.CreateProduct110Request();
+            await _productService.CreateProductAsync(dto);
+
+            var targetProductCode = dto.ProductCode;
+            var startDate = new DateTime(2024, 01, 01, 0, 0, 0, DateTimeKind.Utc);
+            var endDate = new DateTime(2024, 12, 31, 23, 59, 59, DateTimeKind.Utc);
+            var expectedCountTotal = 5;
+            var expectedCountInRange = 3;
+            var expectedTotalValue = dto.RecommendedPrice * expectedCountInRange;
+
+            // Add 3 records within range
+            await _historyService.AddProductionHistoryEntryAsync(
+                new ProductionHistoryCreateRequest {
+                    ProductCode = targetProductCode,
+                    ProductionDate = startDate,
+                    Notes = "In-Range"
+                }
+            );
+            await _historyService.AddProductionHistoryEntryAsync(
+                new ProductionHistoryCreateRequest {
+                    ProductCode = targetProductCode,
+                    ProductionDate = new DateTime(2024, 06, 01, 12, 0, 0, DateTimeKind.Utc),
+                    Notes = "In-Range"
+                }
+            );
+
+            await _historyService.AddProductionHistoryEntryAsync(
+                new ProductionHistoryCreateRequest {
+                    ProductCode = targetProductCode,
+                    ProductionDate = endDate,
+                    Notes = "In-Range"
+                }
+            );
+
+            // Add 2 records outside range 
+            await _historyService.AddProductionHistoryEntryAsync(
+                new ProductionHistoryCreateRequest {
+                    ProductCode = targetProductCode,
+                    ProductionDate = startDate.AddSeconds(-1),
+                    Notes = "Out-of-range"
+                }
+            );
+
+            await _historyService.AddProductionHistoryEntryAsync(
+                new ProductionHistoryCreateRequest {
+                    ProductCode = targetProductCode,
+                    ProductionDate = endDate.AddSeconds(1),
+                    Notes = "Out-of-range"
+                }
+            );
+
+            // Ensure the context is fresh and reads from the DB, not from memory cache
+            ClearChangeTracker(Context);
+
+            // 2. Act
+            var report = await _historyService.GetProductDetailedReportAsync(targetProductCode, startDate, endDate);
+
+            // 3. Assert
+            // Part A: Verify the Report DTO (Business Logic)
+            Assert.IsNotNull(report, "The generated report should not be null.");
+            Assert.AreEqual(targetProductCode, report.ProductCode, "Product code in report mismatch.");
+            Assert.AreEqual(expectedCountInRange, report.Count, "The report failed to filter records by date range correctly.");
+            Assert.AreEqual(expectedTotalValue, report.TotalValue, "The total sum in the report is incorrect.");
+
+            // Part B: Verify Database State (Data Integrity)
+            // We fetch the product to get its ID for direct database querying
+            var productInDb = await Context.Products
+                .FirstOrDefaultAsync(p => p.ProductCode == targetProductCode);
+
+            Assert.IsNotNull(productInDb, "The product must exist in the database.");
+
+            var entriesInDb = await Context.ProductionHistories
+                .Where(h => h.ProductId == productInDb.ProductId)
+                .ToListAsync();
+
+            // Verify total persistence
+            Assert.AreEqual(expectedCountTotal, entriesInDb.Count, $"Total record count in DB should be {expectedCountTotal}.");
+
+            // Verify date filtering logic
+            var filteredInDb = entriesInDb
+                .Where(h => h.CreatedAt >= startDate && h.CreatedAt <= endDate)
+                .ToList();
+
+            Assert.AreEqual(expectedCountInRange, filteredInDb.Count, $"There must be exactly {expectedCountInRange} entries within the range.");
+
+            // Verify that the correct entries were picked by checking their notes
+            Assert.IsTrue(filteredInDb.All(e => e.Notes.Contains("In-Range")),
+                "All records within a period must be labeled 'In-Range'.");
+
+            Assert.IsFalse(filteredInDb.Any(e => e.Notes.Contains("Out-of-range")),
+                "'Out-of-range' records should not be included in the sample for the period.");
+        }
+    }
+}
