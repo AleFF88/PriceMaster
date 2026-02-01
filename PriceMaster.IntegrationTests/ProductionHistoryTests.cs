@@ -201,14 +201,14 @@ namespace PriceMaster.IntegrationTests {
         public async Task AddProductionHistoryEntry_ShouldFreezePrice_WhenProductPriceChangesLater() {
             // 1. Arrange
             // Create a product with an initial price 
-            var productDto = TestDataFactory.CreateProduct110Request();
-            var initialPrice = productDto.RecommendedPrice;
-            var updatedPrice = productDto.RecommendedPrice + 500;
-            await _productService.CreateProductAsync(productDto);
+            var dto = TestDataFactory.CreateProduct110Request();
+            var initialPrice = dto.RecommendedPrice;
+            var updatedPrice = dto.RecommendedPrice + 500;
+            await _productService.CreateProductAsync(dto);
 
             // Create a production history record to "freeze" the current price
             var historyRequest = new ProductionHistoryCreateRequest {
-                ProductCode = productDto.ProductCode,
+                ProductCode = dto.ProductCode,
                 ProductionDate = DateTime.UtcNow,
                 Notes = "Initial snapshot"
             };
@@ -217,7 +217,7 @@ namespace PriceMaster.IntegrationTests {
             // 2. Act
             // Simulate a price update for the product in the catalog (e.g., due to inflation)
             var productInDb = await Context.Products
-                .FirstOrDefaultAsync(p => p.ProductCode == productDto.ProductCode);
+                .FirstOrDefaultAsync(p => p.ProductCode == dto.ProductCode);
 
             Assert.IsNotNull(productInDb);
             productInDb.RecommendedPrice = updatedPrice;
@@ -249,14 +249,13 @@ namespace PriceMaster.IntegrationTests {
         public async Task AddProductionHistoryEntry_ShouldMaintainDataIntegrity_WhenProductBomIsModified() {
             // 1. Arrange
             // Create a product with a standard BOM (defined in TestDataFactory)
-            var productDto = TestDataFactory.CreateProduct110Request();
-            var initialBomCount = productDto.BomItems.Count;
-            await _productService.CreateProductAsync(productDto);
+            var dto = TestDataFactory.CreateProduct110Request();
+            await _productService.CreateProductAsync(dto);
 
             // Record production history. 
             // This captures the state of the product at this point in time.
             var historyRequest = new ProductionHistoryCreateRequest {
-                ProductCode = productDto.ProductCode,
+                ProductCode = dto.ProductCode,
                 ProductionDate = DateTime.UtcNow,
                 Notes = "Original BOM snapshot"
             };
@@ -266,7 +265,7 @@ namespace PriceMaster.IntegrationTests {
             // Simulate a BOM change: Retrieve the product and remove all its components
             var productInDb = await Context.Products
                 .Include(p => p.BomItems)
-                .FirstOrDefaultAsync(p => p.ProductCode == productDto.ProductCode);
+                .FirstOrDefaultAsync(p => p.ProductCode == dto.ProductCode);
 
             Assert.IsNotNull(productInDb, "Product should be found in the database.");
 
