@@ -16,9 +16,8 @@ namespace PriceMaster.IntegrationTests {
         }
 
         /// <summary>
-        /// Validates that a new product with valid data (Code 110) is successfully created.
-        /// Verifies that the service processes the request without errors and persists the entity 
-        ///   to the database with BOM (Bill of materials).
+        /// Validates that a new product with a complex Bill of Materials (BOM) is successfully created.
+        /// Verifies that data is saved correctly, including sizes, prices, and component links.
         /// </summary>
         [TestMethod]
         public async Task CreateProduct_FullComplexBOM_ShouldSaveCorrectly() {
@@ -44,19 +43,19 @@ namespace PriceMaster.IntegrationTests {
             Assert.AreEqual(expectedSizeWidth, productInDb.SizeWidth);
             Assert.AreEqual(expectedSizeHeight, productInDb.SizeHeight);
             Assert.AreEqual(dto.RecommendedPrice, productInDb.RecommendedPrice);
-            Assert.AreEqual(expectedBomCount, productInDb.BomItems.Count, $"The number of positions in the BOM must be {expectedBomCount}.");
-            Assert.IsTrue(productInDb.BomItems.All(b => b.Component != null), "All components must be loaded.");
-            Assert.IsTrue(productInDb.BomItems.Any(b => b.Component!.PricePerUnit> 0), "Components must have prices from seed data.");
+            Assert.AreEqual(expectedBomCount, productInDb.BomItems.Count, $"BOM should contain exactly {expectedBomCount} items.");
+            Assert.IsTrue(productInDb.BomItems.All(b => b.Component != null), "All BOM items must be linked to their respective components.");
+            Assert.IsTrue(productInDb.BomItems.Any(b => b.Component!.PricePerUnit > 0), "Components must retain their prices from the seed data.");
         }
 
         /// <summary>
         /// Verifies that the system prevents creating a product with a code that already exists.
-        /// The ProductCode must be unique across the entire database to ensure data integrity.
+        /// Ensures the ProductCode uniqueness constraint is handled gracefully by the service.
         /// </summary>
         [TestMethod]
         public async Task CreateProduct_DuplicateCode_ShouldThrowException() {
             // 1. Arrange
-            // Create the initial product to occupy the code in the database
+            // Seed the initial product to occupy the ProductCode
             var dto = TestDataFactory.CreateProduct110Request();
             await _productService.CreateProductAsync(dto);
 
@@ -64,20 +63,20 @@ namespace PriceMaster.IntegrationTests {
             var expectedNumberOfRecords = 1;
 
             // 2. Act
-            // Trying to create the same product. This action is expected to fail.
-            IntegrationTestHelper.ClearChangeTracker(Context); 
+            // Attempt to create a product with the same code
+            IntegrationTestHelper.ClearChangeTracker(Context);
             var result = await _productService.CreateProductAsync(dto);
 
             // 3. Assert
-            // Check that the operation result is negative.
-            Assert.IsFalse(result.IsSuccess, "Result should indicate failure for duplicate product code.");
+            // The result should indicate failure rather than throwing an unhandled DB exception
+            Assert.IsFalse(result.IsSuccess, "The service should return a failure result when creating a duplicate ProductCode.");
 
-            // Проверяем, что вернулось именно наше сообщение об ошибке
-            Assert.AreEqual(expectedErrorMessage, result.Message);
+            // Verify the exact error message returned to the user/API
+            Assert.AreEqual(expectedErrorMessage, result.Message, "The error message for a duplicate ProductCode is incorrect.");
 
-            // Additionally: check that there is still only one product with this code in the database
-            var count = await Context.Products.CountAsync(p => p.ProductCode == dto.ProductCode);
-            Assert.AreEqual(expectedNumberOfRecords, count, "Database should still contain only one instance of the product.");
+            // Verify that no duplicate record was actually added to the database
+            var countInDb = await Context.Products.CountAsync(p => p.ProductCode == dto.ProductCode);
+            Assert.AreEqual(expectedNumberOfRecords, countInDb, "Database integrity check failed: duplicate product was persisted.");
         }
     }
 }
