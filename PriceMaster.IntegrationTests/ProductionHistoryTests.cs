@@ -323,5 +323,48 @@ namespace PriceMaster.IntegrationTests {
                 Context.Components.Remove(component);
             }, "Should not be able to mark for deletion a component that is linked to a BOM.");
         }
+
+        /// <summary>
+        /// Ensures that the detailed report for a specific product does not include 
+        /// production data from other products present in the database.
+        /// </summary>
+        [TestMethod]
+        public async Task GetProductDetailedReport_ShouldNotIncludeData_FromOtherProducts() {
+            // 1. Arrange
+            // Create two different products
+            var product110Dto = TestDataFactory.CreateProduct110Request();
+            var product150Dto = TestDataFactory.CreateProduct150Request();
+
+            await _productService.CreateProductAsync(product110Dto);
+            await _productService.CreateProductAsync(product150Dto);
+
+            // Add production record for Product 110
+            await _historyService.AddProductionHistoryEntryAsync(new ProductionHistoryCreateRequest {
+                ProductCode = product110Dto.ProductCode,
+                ProductionDate = DateTime.UtcNow,
+                Notes = "Entry for N110"
+            });
+
+            // Add production record for Product 150
+            await _historyService.AddProductionHistoryEntryAsync(new ProductionHistoryCreateRequest {
+                ProductCode = product150Dto.ProductCode,
+                ProductionDate = DateTime.UtcNow,
+                Notes = "Entry for N150"
+            });
+
+            // Clear tracker to ensure fresh DB query
+            ClearChangeTracker(Context);
+
+            // 2. Act
+            // Request report specifically for Product 110
+            var report = await _historyService.GetProductDetailedReportAsync(product110Dto.ProductCode);
+
+            // 3. Assert
+            Assert.IsNotNull(report, "Report should be generated.");
+            Assert.AreEqual(product110Dto.ProductCode, report.ProductCode, "Report must belong to the requested product.");
+
+            // The crucial check: count must be 1, because product 150 must be filtered out.
+            Assert.AreEqual(1, report.Count, "The report should only count records for the specific product code, excluding others.");
+        }
     }
 }
