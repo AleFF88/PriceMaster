@@ -18,7 +18,7 @@ namespace PriceMaster.IntegrationTests {
         /// <summary>
         /// Validates that a new product with valid data (Code 110) is successfully created.
         /// Verifies that the service processes the request without errors and persists the entity 
-        /// to the database with BOM (Bill of materials).
+        ///   to the database with BOM (Bill of materials).
         /// </summary>
         [TestMethod]
         public async Task CreateProduct_FullComplexBOM_ShouldSaveCorrectly() {

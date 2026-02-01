@@ -132,7 +132,7 @@ namespace PriceMaster.IntegrationTests {
         /// <summary>
         /// Verifies that the system handles requests for periods with no data gracefully.
         /// To run this test, the product must exist in the database, but have no associated 
-        ///    history records within the specified date range.
+        ///   history records within the specified date range.
         /// </summary>
         [TestMethod]
         public async Task GetProductDetailedReport_WithNoEntriesInRange_ShouldReturnNull() {
@@ -156,9 +156,9 @@ namespace PriceMaster.IntegrationTests {
 
         /// <summary>
         /// Verifies that a history record captures and persists the correct 
-        ///    product price at the moment of creation.
+        ///   product price at the moment of creation.
         /// This is crucial for financial integrity, ensuring historical reports 
-        ///    remain accurate even if product prices change later.
+        ///   remain accurate even if product prices change later.
         /// </summary>
         [TestMethod]
         public async Task AddProductionHistoryEntry_ShouldPersistCurrentProductPrice() {
@@ -195,7 +195,7 @@ namespace PriceMaster.IntegrationTests {
 
         /// <summary>
         /// Checks that the price in the production history remains unchanged ("frozen"),
-        ///    even if the product's current recommended price has been updated.
+        ///   even if the product's current recommended price has been updated.
         /// </summary>
         [TestMethod]
         public async Task AddProductionHistoryEntry_ShouldFreezePrice_WhenProductPriceChangesLater() {
@@ -295,8 +295,33 @@ namespace PriceMaster.IntegrationTests {
             // Note: In your current architecture, history links to ProductId.
             // This test confirms that the history record itself is not deleted 
             // and its 'PriceAtCreation' remains intact regardless of BOM changes.
-            Assert.AreEqual(productDto.RecommendedPrice, historyEntry.RecommendedPrice,
+            Assert.AreEqual(dto.RecommendedPrice, historyEntry.RecommendedPrice,
                 "Historical price snapshot must remain intact even if the current product BOM is destroyed.");
+        }
+
+        /// <summary>
+        /// Ensures that the system prevents deleting a component if it is still 
+        ///   referenced in any product's Bill of Materials (BOM).
+        /// </summary>
+        [TestMethod]
+        public async Task DeleteComponent_ShouldThrowException_WhenComponentIsReferencedInBom() {
+            // 1. Arrange
+            // Create a product with a BOM (this creates component-product links)
+            var productDto = TestDataFactory.CreateProduct110Request();
+            await _productService.CreateProductAsync(productDto);
+
+            var componentIdInUse = productDto.BomItems.First().ComponentId;
+
+            // 2. Act & Assert
+            var component = await Context.Components.FindAsync(componentIdInUse);
+            Assert.IsNotNull(component, "Component should exist in the database.");
+
+            // EF Core throws InvalidOperationException during Remove() when it detects 
+            // that a required relationship will be severed.
+            Assert.ThrowsException<InvalidOperationException>(() =>
+            {
+                Context.Components.Remove(component);
+            }, "Should not be able to mark for deletion a component that is linked to a BOM.");
         }
     }
 }
