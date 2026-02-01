@@ -166,10 +166,9 @@ namespace PriceMaster.IntegrationTests {
             // Seed the base product '110' into the in-memory database
             var dto = TestDataFactory.CreateProduct110Request();
             await _productService.CreateProductAsync(dto);
-            
+
             var expectedPrice = dto.RecommendedPrice;
             var expectedNote = "Snapshot Price Verification";
-
 
             var request = new ProductionHistoryCreateRequest {
                 ProductCode = dto.ProductCode,
@@ -194,6 +193,52 @@ namespace PriceMaster.IntegrationTests {
                 "The history entry failed to capture the product's recommended price at the moment of creation.");
         }
 
+        /// <summary>
+        /// Checks that the price in the production history remains unchanged ("frozen"),
+        ///    even if the product's current recommended price has been updated.
+        /// </summary>
+        [TestMethod]
+        public async Task AddProductionHistoryEntry_ShouldFreezePrice_WhenProductPriceChangesLater() {
+            // 1. Arrange
+            // Create a product with an initial price 
+            var productDto = TestDataFactory.CreateProduct110Request();
+            var initialPrice = productDto.RecommendedPrice;
+            var updatedPrice = productDto.RecommendedPrice + 500;
+            await _productService.CreateProductAsync(productDto);
 
+            // Create a production history record to "freeze" the current price
+            var historyRequest = new ProductionHistoryCreateRequest {
+                ProductCode = productDto.ProductCode,
+                ProductionDate = DateTime.UtcNow,
+                Notes = "Initial snapshot"
+            };
+            await _historyService.AddProductionHistoryEntryAsync(historyRequest);
+
+            // 2. Act
+            // Simulate a price update for the product in the catalog (e.g., due to inflation)
+            var productInDb = await Context.Products
+                .FirstOrDefaultAsync(p => p.ProductCode == productDto.ProductCode);
+
+            Assert.IsNotNull(productInDb);
+            productInDb.RecommendedPrice = updatedPrice;
+            await Context.SaveChangesAsync();
+
+            // Clear the EF Core change tracker to ensure we fetch fresh data from the database
+            ClearChangeTracker(Context);
+
+            // 3. Assert
+            // Retrieve the history entry and check if the price remained unchanged
+            var historyEntry = await Context.ProductionHistories
+                .FirstOrDefaultAsync(h => h.ProductId == productInDb.ProductId);
+
+            Assert.IsNotNull(historyEntry, "History record should exist.");
+
+            // CORE CHECK: The price in history must remain at the initial level, not the updated one 
+            Assert.AreEqual(initialPrice, historyEntry.RecommendedPrice, "The price in history must remain unchanged (frozen) after the product catalog price update.");
+
+            // Verify that the actual product price WAS updated
+            var updatedProduct = await Context.Products.FindAsync(productInDb.ProductId);
+            Assert.AreEqual(updatedPrice, updatedProduct!.RecommendedPrice, "The current product price in the catalog should reflect the new updated value.");
+        }
     }
 }
