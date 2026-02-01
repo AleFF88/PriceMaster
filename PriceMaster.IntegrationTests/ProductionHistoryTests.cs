@@ -1,16 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PriceMaster.Application.DTOs;
 using PriceMaster.Application.Services;
-using PriceMaster.Domain.Interfaces;
 using PriceMaster.Infrastructure.Repositories;
-using System;
-using System.Threading.Tasks;
-
-// Using static imports to access helper methods directly from the same namespace
 using static PriceMaster.IntegrationTests.IntegrationTestHelper;
-using static PriceMaster.IntegrationTests.TestDataFactory;
 
 namespace PriceMaster.IntegrationTests {
     /// <summary>
