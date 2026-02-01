@@ -240,5 +240,64 @@ namespace PriceMaster.IntegrationTests {
             var updatedProduct = await Context.Products.FindAsync(productInDb.ProductId);
             Assert.AreEqual(updatedPrice, updatedProduct!.RecommendedPrice, "The current product price in the catalog should reflect the new updated value.");
         }
+
+        /// <summary>
+        /// Verifies that the production history remains consistent even if the 
+        /// product's Bill of Materials (BOM) is modified later.
+        /// </summary>
+        [TestMethod]
+        public async Task AddProductionHistoryEntry_ShouldMaintainDataIntegrity_WhenProductBomIsModified() {
+            // 1. Arrange
+            // Create a product with a standard BOM (defined in TestDataFactory)
+            var productDto = TestDataFactory.CreateProduct110Request();
+            var initialBomCount = productDto.BomItems.Count;
+            await _productService.CreateProductAsync(productDto);
+
+            // Record production history. 
+            // This captures the state of the product at this point in time.
+            var historyRequest = new ProductionHistoryCreateRequest {
+                ProductCode = productDto.ProductCode,
+                ProductionDate = DateTime.UtcNow,
+                Notes = "Original BOM snapshot"
+            };
+            await _historyService.AddProductionHistoryEntryAsync(historyRequest);
+
+            // 2. Act
+            // Simulate a BOM change: Retrieve the product and remove all its components
+            var productInDb = await Context.Products
+                .Include(p => p.BomItems)
+                .FirstOrDefaultAsync(p => p.ProductCode == productDto.ProductCode);
+
+            Assert.IsNotNull(productInDb, "Product should be found in the database.");
+
+            // Clear the current BOM items to simulate a major product redesign
+            productInDb.BomItems.Clear();
+            await Context.SaveChangesAsync();
+
+            // Clear tracker to ensure fresh data fetch
+            ClearChangeTracker(Context);
+
+            // 3. Assert
+            // Fetch the history record again
+            var historyEntry = await Context.ProductionHistories
+                .FirstOrDefaultAsync(h => h.ProductId == productInDb.ProductId);
+
+            Assert.IsNotNull(historyEntry, "Historical record should still exist.");
+
+            // Verify that the product's current BOM is indeed empty
+            var updatedProduct = await Context.Products
+                .Include(p => p.BomItems)
+                .FirstOrDefaultAsync(p => p.ProductId == productInDb.ProductId);
+
+            Assert.AreEqual(0, updatedProduct!.BomItems.Count,
+                "The current product's BOM should be updated and empty.");
+
+            // Verify history integrity
+            // Note: In your current architecture, history links to ProductId.
+            // This test confirms that the history record itself is not deleted 
+            // and its 'PriceAtCreation' remains intact regardless of BOM changes.
+            Assert.AreEqual(productDto.RecommendedPrice, historyEntry.RecommendedPrice,
+                "Historical price snapshot must remain intact even if the current product BOM is destroyed.");
+        }
     }
 }
