@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 using PriceMaster.Application.Services;
+using System.Reflection;
 
 namespace PriceMaster.Application {
 
@@ -9,6 +11,9 @@ namespace PriceMaster.Application {
             // SERVICES
             services.AddScoped<ProductService>();
             services.AddScoped<ProductionHistoryService>();
+
+            // VALIDATORS
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             return services;
         }

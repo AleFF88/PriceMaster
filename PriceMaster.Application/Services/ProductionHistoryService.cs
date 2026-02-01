@@ -1,4 +1,5 @@
-﻿using PriceMaster.Application.DTOs;
+﻿using FluentValidation;
+using PriceMaster.Application.DTOs;
 using PriceMaster.Domain.Entities;
 using PriceMaster.Domain.Interfaces;
 using PriceMaster.Domain.Reports;
@@ -8,12 +9,14 @@ namespace PriceMaster.Application.Services {
     public class ProductionHistoryService {
         private readonly IProductRepository _productRepository;
         private readonly IProductionHistoryRepository _historyRepository;
-        private readonly IProductionHistoryQueries _historyQueries;
+        private readonly IProductionHistoryQueries _historyQueries; 
+        private readonly IValidator<ProductionHistoryCreateRequest> _validator;
 
-        public ProductionHistoryService(IProductRepository productRepository, IProductionHistoryRepository historyRepository, IProductionHistoryQueries historyQueries) {
+        public ProductionHistoryService(IProductRepository productRepository, IProductionHistoryRepository historyRepository, IProductionHistoryQueries historyQueries, IValidator<ProductionHistoryCreateRequest> validator) {
             _productRepository = productRepository;
             _historyRepository = historyRepository;
             _historyQueries = historyQueries;
+            _validator = validator;
         }
 
         /// <summary>
@@ -25,6 +28,13 @@ namespace PriceMaster.Application.Services {
         /// <param name="notes">Optional notes to append to the history record.</param>
         /// <returns>Operation result with success flag and message.</returns>
         public async Task<ServiceResult> AddProductionHistoryEntryAsync(ProductionHistoryCreateRequest request) {
+            // Validation
+            var validationResult = await _validator.ValidateAsync(request);
+            if (!validationResult.IsValid) {
+                var errors = string.Join(" ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return ServiceResult.Failure(errors);
+            }
+
             try {
                 var product = await _productRepository.GetByProductCodeWithBomAsync(request.ProductCode);
 

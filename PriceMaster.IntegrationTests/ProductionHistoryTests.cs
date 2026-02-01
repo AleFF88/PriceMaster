@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PriceMaster.Application.DTOs;
 using PriceMaster.Application.Services;
+using PriceMaster.Application.Validators;
 using PriceMaster.Infrastructure.Repositories;
 using static PriceMaster.IntegrationTests.IntegrationTestHelper;
 
@@ -22,7 +23,10 @@ namespace PriceMaster.IntegrationTests {
             var historyRepo = new ProductionHistoryRepository(Context);
             var historyQueries = new ProductionHistoryQueries(Context);
 
-            _historyService = new ProductionHistoryService(productRepo, historyRepo, historyQueries);
+            // Validator instance
+            var validator = new ProductionHistoryCreateRequestValidator();
+
+            _historyService = new ProductionHistoryService(productRepo, historyRepo, historyQueries, validator);
             _productService = new ProductService(productRepo);
 
         }
