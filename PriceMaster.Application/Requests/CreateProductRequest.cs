@@ -5,10 +5,10 @@
         public decimal SizeWidth { get; init; }
         public decimal SizeHeight { get; init; }
         public decimal RecommendedPrice { get; init; }
-        public required List<BomItemDto> BomItems { get; init; }
+        public required List<BomItemRequest> BomItems { get; init; }
     }
 
-    public record BomItemDto {
+    public record BomItemRequest {
         public int ComponentId { get; init; }
         public decimal Quantity { get; init; }
     };
