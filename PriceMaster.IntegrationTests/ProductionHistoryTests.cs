@@ -25,9 +25,10 @@ namespace PriceMaster.IntegrationTests {
 
             // Validator instance
             var validator = new ProductionHistoryCreateRequestValidator();
+            var historyValidator = new ProductionHistoryCreateRequestValidator();
 
             _historyService = new ProductionHistoryService(productRepo, historyRepo, historyQueries, validator);
-            _productService = new ProductService(productRepo);
+            _historyService = new ProductionHistoryService(productRepo, historyRepo, historyQueries, historyValidator);
 
         }
 
