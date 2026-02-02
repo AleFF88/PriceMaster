@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PriceMaster.Application.Services;
+using PriceMaster.Application.Validators;
 using PriceMaster.Infrastructure.Repositories;
 
 namespace PriceMaster.IntegrationTests {
@@ -12,7 +13,12 @@ namespace PriceMaster.IntegrationTests {
         public void TestInit() {
             // Initialize the service before each test
             var repository = new ProductRepository(Context);
-            _productService = new ProductService(repository);
+
+
+            // Validator instance
+            var validator = new CreateProductDtoValidator();
+
+            _productService = new ProductService(repository, validator);
         }
 
         /// <summary>

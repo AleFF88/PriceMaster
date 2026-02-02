@@ -1,14 +1,18 @@
 ﻿using PriceMaster.Application.DTOs;
 using PriceMaster.Domain.Entities;
 using PriceMaster.Domain.Interfaces;
+using FluentValidation;
+
 
 namespace PriceMaster.Application.Services {
 
     public class ProductService {
         private readonly IProductRepository _productRepository;
+        private readonly IValidator<CreateProductDto> _validator;
 
-        public ProductService(IProductRepository productRepository) {
+        public ProductService(IProductRepository productRepository, IValidator<CreateProductDto> validator) {
             _productRepository = productRepository;
+            _validator = validator;
         }
 
         /// <summary>
@@ -18,6 +22,13 @@ namespace PriceMaster.Application.Services {
         /// <param name="dto">A data transfer object containing product parameters and a list of components.</param>
         /// <returns>Operation result with success flag and message.</returns>
         public async Task<ServiceResult> CreateProductAsync(CreateProductDto dto) {
+            // Validation
+            var validationResult = await _validator.ValidateAsync(dto);
+            if (!validationResult.IsValid) {
+                var errors = string.Join(" ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return ServiceResult.Failure(errors);
+            }
+
             // Check for duplicates (business rule)
             if (await _productRepository.Exists(dto.ProductCode)) {
                 return ServiceResult.Failure($"Product with code {dto.ProductCode} already exists.");
