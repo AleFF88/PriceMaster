@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PriceMaster.Application.DTOs;
+using PriceMaster.Application.Requests;
 using PriceMaster.Application.Services;
 using PriceMaster.Application.Validators;
 using PriceMaster.Infrastructure.Repositories;
@@ -24,8 +24,8 @@ namespace PriceMaster.IntegrationTests {
             var historyQueries = new ProductionHistoryQueries(Context);
 
             // Validator instance
-            var productValidator = new CreateProductDtoValidator();
-            var historyValidator = new ProductionHistoryCreateRequestValidator();
+            var productValidator = new CreateProductRequestValidator();
+            var historyValidator = new CreateProductionHistoryRequestValidator();
 
             _productService = new ProductService(productRepo, productValidator);
             _historyService = new ProductionHistoryService(productRepo, historyRepo, historyQueries, historyValidator);
@@ -53,14 +53,14 @@ namespace PriceMaster.IntegrationTests {
 
             // Add 3 records within range
             await _historyService.AddProductionHistoryEntryAsync(
-                new ProductionHistoryCreateRequest {
+                new CreateProductionHistoryRequest {
                     ProductCode = targetProductCode,
                     ProductionDate = startDate,
                     Notes = "In-Range"
                 }
             );
             await _historyService.AddProductionHistoryEntryAsync(
-                new ProductionHistoryCreateRequest {
+                new CreateProductionHistoryRequest {
                     ProductCode = targetProductCode,
                     ProductionDate = new DateTime(2024, 06, 01, 12, 0, 0, DateTimeKind.Utc),
                     Notes = "In-Range"
@@ -68,7 +68,7 @@ namespace PriceMaster.IntegrationTests {
             );
 
             await _historyService.AddProductionHistoryEntryAsync(
-                new ProductionHistoryCreateRequest {
+                new CreateProductionHistoryRequest {
                     ProductCode = targetProductCode,
                     ProductionDate = endDate,
                     Notes = "In-Range"
@@ -77,7 +77,7 @@ namespace PriceMaster.IntegrationTests {
 
             // Add 2 records outside range 
             await _historyService.AddProductionHistoryEntryAsync(
-                new ProductionHistoryCreateRequest {
+                new CreateProductionHistoryRequest {
                     ProductCode = targetProductCode,
                     ProductionDate = startDate.AddSeconds(-1),
                     Notes = "Out-of-range"
@@ -85,7 +85,7 @@ namespace PriceMaster.IntegrationTests {
             );
 
             await _historyService.AddProductionHistoryEntryAsync(
-                new ProductionHistoryCreateRequest {
+                new CreateProductionHistoryRequest {
                     ProductCode = targetProductCode,
                     ProductionDate = endDate.AddSeconds(1),
                     Notes = "Out-of-range"
@@ -175,7 +175,7 @@ namespace PriceMaster.IntegrationTests {
             var expectedPrice = dto.RecommendedPrice;
             var expectedNote = "Snapshot Price Verification";
 
-            var request = new ProductionHistoryCreateRequest {
+            var request = new CreateProductionHistoryRequest {
                 ProductCode = dto.ProductCode,
                 ProductionDate = DateTime.UtcNow,
                 Notes = expectedNote
@@ -212,7 +212,7 @@ namespace PriceMaster.IntegrationTests {
             await _productService.CreateProductAsync(dto);
 
             // Create a production history record to "freeze" the current price
-            var historyRequest = new ProductionHistoryCreateRequest {
+            var historyRequest = new CreateProductionHistoryRequest {
                 ProductCode = dto.ProductCode,
                 ProductionDate = DateTime.UtcNow,
                 Notes = "Initial snapshot"
@@ -259,7 +259,7 @@ namespace PriceMaster.IntegrationTests {
 
             // Record production history. 
             // This captures the state of the product at this point in time.
-            var historyRequest = new ProductionHistoryCreateRequest {
+            var historyRequest = new CreateProductionHistoryRequest {
                 ProductCode = dto.ProductCode,
                 ProductionDate = DateTime.UtcNow,
                 Notes = "Original BOM snapshot"
@@ -344,14 +344,14 @@ namespace PriceMaster.IntegrationTests {
             await _productService.CreateProductAsync(product150Dto);
 
             // Add production record for Product 110
-            await _historyService.AddProductionHistoryEntryAsync(new ProductionHistoryCreateRequest {
+            await _historyService.AddProductionHistoryEntryAsync(new CreateProductionHistoryRequest {
                 ProductCode = product110Dto.ProductCode,
                 ProductionDate = DateTime.UtcNow,
                 Notes = "Entry for N110"
             });
 
             // Add production record for Product 150
-            await _historyService.AddProductionHistoryEntryAsync(new ProductionHistoryCreateRequest {
+            await _historyService.AddProductionHistoryEntryAsync(new CreateProductionHistoryRequest {
                 ProductCode = product150Dto.ProductCode,
                 ProductionDate = DateTime.UtcNow,
                 Notes = "Entry for N150"

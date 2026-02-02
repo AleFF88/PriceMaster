@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
-using PriceMaster.Application.DTOs;
+using PriceMaster.Application.Requests;
 
 namespace PriceMaster.Application.Validators {
-    public class ProductionHistoryCreateRequestValidator : AbstractValidator<ProductionHistoryCreateRequest> {
-        public ProductionHistoryCreateRequestValidator() {
-            RuleFor(x => x.ProductCode).NotEmpty();
+    public class CreateProductionHistoryRequestValidator : AbstractValidator<CreateProductionHistoryRequest> {
+        public CreateProductionHistoryRequestValidator() {
+            RuleFor(x => x.ProductCode).EnsureNotEmpty();
 
             RuleFor(x => x.ProductionDate)
                 .LessThanOrEqualTo(p => DateTime.UtcNow).WithMessage("Production date cannot be in the future.");

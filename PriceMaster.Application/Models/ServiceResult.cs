@@ -1,4 +1,4 @@
-﻿namespace PriceMaster.Application.DTOs {
+﻿namespace PriceMaster.Application.Models {
     public class ServiceResult {
         public bool IsSuccess { get; init; }
         public string? Message { get; init; } 

@@ -1,16 +1,17 @@
-﻿using PriceMaster.Application.DTOs;
+﻿using PriceMaster.Application.Requests;
 using PriceMaster.Domain.Entities;
 using PriceMaster.Domain.Interfaces;
 using FluentValidation;
+using PriceMaster.Application.Models;
 
 
 namespace PriceMaster.Application.Services {
 
     public class ProductService {
         private readonly IProductRepository _productRepository;
-        private readonly IValidator<CreateProductDto> _validator;
+        private readonly IValidator<CreateProductRequest> _validator;
 
-        public ProductService(IProductRepository productRepository, IValidator<CreateProductDto> validator) {
+        public ProductService(IProductRepository productRepository, IValidator<CreateProductRequest> validator) {
             _productRepository = productRepository;
             _validator = validator;
         }
@@ -21,7 +22,7 @@ namespace PriceMaster.Application.Services {
         /// </summary>
         /// <param name="dto">A data transfer object containing product parameters and a list of components.</param>
         /// <returns>Operation result with success flag and message.</returns>
-        public async Task<ServiceResult> CreateProductAsync(CreateProductDto dto) {
+        public async Task<ServiceResult> CreateProductAsync(CreateProductRequest dto) {
             // Validation
             var validationResult = await _validator.ValidateAsync(dto);
             if (!validationResult.IsValid) {

@@ -16,7 +16,7 @@ namespace PriceMaster.IntegrationTests {
 
 
             // Validator instance
-            var validator = new CreateProductDtoValidator();
+            var validator = new CreateProductRequestValidator();
 
             _productService = new ProductService(repository, validator);
         }

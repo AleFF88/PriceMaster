@@ -1,5 +1,5 @@
-﻿namespace PriceMaster.Application.DTOs {
-    public record CreateProductDto {
+﻿namespace PriceMaster.Application.Requests {
+    public record CreateProductRequest {
         public required string ProductCode { get; init; }
         public int SeriesId { get; init; }
         public decimal SizeWidth { get; init; }

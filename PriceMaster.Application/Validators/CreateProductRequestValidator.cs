@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using PriceMaster.Application.DTOs;
+using PriceMaster.Application.Requests;
 
 namespace PriceMaster.Application.Validators {
     /// <summary>
@@ -11,10 +11,10 @@ namespace PriceMaster.Application.Validators {
     /// Database-related validation is handled within the ProductService to keep 
     /// the validator fast and independent of infrastructure.
     /// </remarks>
-    public class CreateProductDtoValidator : AbstractValidator<CreateProductDto> {
-        public CreateProductDtoValidator() {
+    public class CreateProductRequestValidator : AbstractValidator<CreateProductRequest> {
+        public CreateProductRequestValidator() {
             RuleFor(x => x.ProductCode)
-                .NotEmpty()
+                .EnsureNotEmpty()
                 .MaximumLength(10).WithMessage("Product code cannot exceed 10 characters.");
 
             RuleFor(x => x.SeriesId).IsPositive();
@@ -22,7 +22,7 @@ namespace PriceMaster.Application.Validators {
             RuleFor(x => x.SizeHeight).IsPositive();
             RuleFor(x => x.RecommendedPrice).IsPositive();
 
-            RuleFor(x => x.BomItems).NotEmpty("Product must have at least one BOM item.");
+            RuleFor(x => x.BomItems).EnsureNotEmpty("Product must have at least one BOM item.");
 
             RuleForEach(x => x.BomItems).ChildRules(item => {
                 item.RuleFor(i => i.ComponentId).IsPositive();

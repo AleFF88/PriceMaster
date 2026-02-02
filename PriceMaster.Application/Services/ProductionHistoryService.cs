@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
-using PriceMaster.Application.DTOs;
+using PriceMaster.Application.Models;
+using PriceMaster.Application.Requests;
 using PriceMaster.Domain.Entities;
 using PriceMaster.Domain.Interfaces;
 using PriceMaster.Domain.Reports;
@@ -10,9 +11,9 @@ namespace PriceMaster.Application.Services {
         private readonly IProductRepository _productRepository;
         private readonly IProductionHistoryRepository _historyRepository;
         private readonly IProductionHistoryQueries _historyQueries; 
-        private readonly IValidator<ProductionHistoryCreateRequest> _validator;
+        private readonly IValidator<CreateProductionHistoryRequest> _validator;
 
-        public ProductionHistoryService(IProductRepository productRepository, IProductionHistoryRepository historyRepository, IProductionHistoryQueries historyQueries, IValidator<ProductionHistoryCreateRequest> validator) {
+        public ProductionHistoryService(IProductRepository productRepository, IProductionHistoryRepository historyRepository, IProductionHistoryQueries historyQueries, IValidator<CreateProductionHistoryRequest> validator) {
             _productRepository = productRepository;
             _historyRepository = historyRepository;
             _historyQueries = historyQueries;
@@ -27,7 +28,7 @@ namespace PriceMaster.Application.Services {
         /// <param name="productCode">Unique product code to identify the product.</param>
         /// <param name="notes">Optional notes to append to the history record.</param>
         /// <returns>Operation result with success flag and message.</returns>
-        public async Task<ServiceResult> AddProductionHistoryEntryAsync(ProductionHistoryCreateRequest request) {
+        public async Task<ServiceResult> AddProductionHistoryEntryAsync(CreateProductionHistoryRequest request) {
             // Validation
             var validationResult = await _validator.ValidateAsync(request);
             if (!validationResult.IsValid) {

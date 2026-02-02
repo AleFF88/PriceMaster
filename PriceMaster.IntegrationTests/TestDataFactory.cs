@@ -1,4 +1,4 @@
-﻿using PriceMaster.Application.DTOs;
+﻿using PriceMaster.Application.Requests;
 
 namespace PriceMaster.IntegrationTests {
     /// <summary>
@@ -9,8 +9,8 @@ namespace PriceMaster.IntegrationTests {
         /// <summary>
         /// Simulate Payload for creating a product with ID = 110.
         /// </summary>
-        internal static CreateProductDto CreateProduct110Request() {
-            return new CreateProductDto {
+        internal static CreateProductRequest CreateProduct110Request() {
+            return new CreateProductRequest {
                 ProductCode = "110",
                 SeriesId = 1,
                 SizeWidth = 60,
@@ -36,8 +36,8 @@ namespace PriceMaster.IntegrationTests {
         /// <summary>
         /// Simulate Payload for creating a product with ID = 150.
         /// </summary>
-        internal static CreateProductDto CreateProduct150Request() {
-            return new CreateProductDto {
+        internal static CreateProductRequest CreateProduct150Request() {
+            return new CreateProductRequest {
                 ProductCode = "150",
                 SeriesId = 1,
                 SizeWidth = 60,
