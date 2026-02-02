@@ -61,5 +61,34 @@ namespace PriceMaster.IntegrationTests {
                 }
             };
         }
+
+        /// <summary>
+        /// Simulate Payload for creating a product with customn product code. Used in tests for validation.
+        /// </summary>
+        internal static CreateProductRequest CreateValidRequestWithProductCode(string? code) 
+            => CreateBaseValidRequest() with { ProductCode = code! };
+        
+        /// <summary>
+        /// Simulate Payload for creating a product with customn price. Used in tests for validation.
+        /// </summary>
+        internal static CreateProductRequest CreateValidRequestWithRecomendedPrice(decimal price) 
+            => CreateBaseValidRequest() with { RecommendedPrice = price };
+
+        /// <summary>
+        /// Simulate Payload with an invalid product code and custom BOM items. Used for nested validation testing.
+        /// </summary>
+        internal static CreateProductRequest CreateRequestWithInvalidCodeAndBom(string? code, List<BomItemRequest> bomItems) 
+            => CreateBaseValidRequest() with { ProductCode = code!, BomItems = bomItems };
+
+        private static CreateProductRequest CreateBaseValidRequest() => new() {
+            ProductCode = "1000",
+            SeriesId = 1,
+            SizeWidth = 60,
+            SizeHeight = 30,
+            RecommendedPrice = 1000,
+            BomItems = new List<BomItemRequest> {
+                new() { ComponentId = 1, Quantity = 1 }
+            }
+        };
     }
 }
