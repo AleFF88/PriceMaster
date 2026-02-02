@@ -24,13 +24,18 @@ namespace PriceMaster.Application.Validators {
         }
 
         /// <summary>
-        /// Validates that a property is not null or empty. 
-        /// <para><b>This method shadows the default FluentValidation NotEmpty to apply a project-wide error message.</b></para>
+        /// Project-specific validation rule: Ensures that a property is not null or empty.
         /// </summary>
         /// <typeparam name="T">The type of the parent object.</typeparam>
-        /// <param name="ruleBuilder">The rule builder for a string property.</param>
+        /// <typeparam name="TProperty">The type of the property being validated.</typeparam>
+        /// <param name="ruleBuilder">The rule builder for the property.</param>
+        /// <param name="customMessage">Optional custom error message.</param>
         /// <returns>A continuous rule builder.</returns>
-        public static IRuleBuilderOptions<T, TProperty> NotEmpty<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, string? customMessage = null) {
+        /// <remarks>
+        /// This is a custom wrapper around FluentValidation's <c>NotEmpty()</c>.
+        /// Use this method instead of the standard NotEmpty to maintain consistency across the Application layer.
+        /// </remarks>
+        public static IRuleBuilderOptions<T, TProperty> EnsureNotEmpty<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, string? customMessage = null) {
             var message = customMessage ?? "{PropertyName} must be provided.";
             return ruleBuilder
                 .NotEmpty()
