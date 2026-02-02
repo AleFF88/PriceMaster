@@ -96,7 +96,13 @@ namespace PriceMaster.IntegrationTests {
             ClearChangeTracker(Context);
 
             // 2. Act
-            var report = await _historyService.GetProductDetailedReportAsync(targetProductCode, startDate, endDate);
+            var request = new GetProductDetailedReportRequest {
+                ProductCode = targetProductCode,
+                StartDate = startDate,
+                EndDate = endDate
+            };
+
+            var report = await _historyService.GetProductDetailedReportAsync(request);
 
             // 3. Assert
             // Part A: Verify the Report DTO (Business Logic)
@@ -152,7 +158,13 @@ namespace PriceMaster.IntegrationTests {
             var productCode = dto.ProductCode;
 
             // 2. Act
-            var report = await _historyService.GetProductDetailedReportAsync(productCode, startDate, endDate);
+            var request = new GetProductDetailedReportRequest {
+                ProductCode = productCode,
+                StartDate = startDate,
+                EndDate = endDate
+            };
+
+            var report = await _historyService.GetProductDetailedReportAsync(request);
 
             // 3. Assert
             // If the query returns null for empty results, we verify that here
@@ -362,7 +374,11 @@ namespace PriceMaster.IntegrationTests {
 
             // 2. Act
             // Request report specifically for Product 110
-            var report = await _historyService.GetProductDetailedReportAsync(product110Dto.ProductCode);
+            var request = new GetProductDetailedReportRequest {
+                ProductCode = product110Dto.ProductCode
+            };
+
+            var report = await _historyService.GetProductDetailedReportAsync(request);
 
             // 3. Assert
             Assert.IsNotNull(report, "Report should be generated.");

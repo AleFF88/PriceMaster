@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using PriceMaster.Application.Models;
 using PriceMaster.Application.Requests;
+using PriceMaster.Application.Validators;
 using PriceMaster.Domain.Entities;
 using PriceMaster.Domain.Interfaces;
 using PriceMaster.Domain.Reports;
@@ -79,15 +80,22 @@ namespace PriceMaster.Application.Services {
         /// If no start or end date is provided, the report covers the entire available history.
         /// Returns null if no matching records are found.
         /// </summary>
-        /// <param name="productCode">Unique product code identifying the product.</param> 
-        /// <param name="startDate">Optional start date of the reporting period; if null, uses the earliest available record.</param> 
-        /// <param name="endDate">Optional end date of the reporting period; if null, uses the latest available record.</param> 
+        /// <param name="request">The report request containing the product code and optional date range.</param>
         /// <returns>
         /// A <see cref="ProductDetailedReport"/> containing aggregated data for the product, 
-        /// or null if no matching records are found. 
+        ///   or null if no matching records are found. 
         /// </returns>
-        public async Task<ProductDetailedReport?> GetProductDetailedReportAsync(string productCode, DateTime? startDate = null, DateTime? endDate = null)
-            => await _historyQueries.GetProductDetailedReportAsync(productCode, startDate, endDate);
+        /// 
+        public async Task<ProductDetailedReport?> GetProductDetailedReportAsync(GetProductDetailedReportRequest request) {
+            // Validation
+            var validator = new GetProductDetailedReportRequestValidator();
+            var validationResult = await validator.ValidateAsync(request);
 
+            if (!validationResult.IsValid) {
+                throw new ValidationException(validationResult.Errors);
+            }
+
+            return await _historyQueries.GetProductDetailedReportAsync(request.ProductCode, request.StartDate, request.EndDate);
+        }
     }
 }
