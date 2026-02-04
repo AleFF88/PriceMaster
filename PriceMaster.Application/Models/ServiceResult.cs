@@ -1,5 +1,5 @@
 ﻿namespace PriceMaster.Application.Models {
-    public class ServiceResult {
+    public record ServiceResult {
         public bool IsSuccess { get; init; }
         public string? Message { get; init; } 
 

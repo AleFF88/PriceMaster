@@ -1,7 +1,7 @@
 ﻿namespace PriceMaster.Application.Requests {
-    public class CreateProductionHistoryRequest {
-        public required string ProductCode { get; set; }
-        public DateTime? ProductionDate { get; set; }
-        public string? Notes { get; set; }
+    public record CreateProductionHistoryRequest {
+        public required string ProductCode { get; init; }
+        public DateTime? ProductionDate { get; init; }
+        public string? Notes { get; init; }
     }
 }
