@@ -30,9 +30,23 @@ namespace PriceMaster.Application.Services {
                 return ServiceResult.Failure(errors);
             }
 
-            // Check for duplicates (business rule)
+            // Domain Logic Validation 1. Check for duplicates (business rule)
             if (await _productRepository.Exists(dto.ProductCode)) {
                 return ServiceResult.Failure($"Product with code {dto.ProductCode} already exists.");
+            }
+
+            // Domain Logic Validation 2. Check if all components in BOM exist in the database
+            var requestedIds = dto.BomItems
+                .Select(b => b.ComponentId)
+                .Distinct()
+                .ToList();
+
+            var existingComponents = await _productRepository.GetComponentsByIdsAsync(requestedIds);
+            var existingIds = existingComponents.Select(c => c.ComponentId).ToHashSet();
+            foreach (var id in requestedIds) {
+                if (!existingIds.Contains(id)) {
+                    return ServiceResult.Failure($"Component with ID {id} does not exist in the database.");
+                }
             }
 
             // Mapping DTO -> Entity

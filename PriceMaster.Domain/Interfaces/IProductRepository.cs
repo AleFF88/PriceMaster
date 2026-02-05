@@ -19,6 +19,13 @@ namespace PriceMaster.Domain.Interfaces {
         Task<bool> Exists(string productCode);
 
         /// <summary>
+        /// Fetches components by their IDs to validate existence in bulk.
+        /// </summary>
+        /// <param name="ids">A collection of unique component identifiers to look for.</param>
+        /// <returns>A collection of components that were found in the database matching the provided IDs.</returns>
+        Task<IEnumerable<Component>> GetComponentsByIdsAsync(IEnumerable<int> ids);
+
+        /// <summary>
         /// Retrieves a product by its code including BomItems and their components.
         /// </summary>
         /// <param name="productCode">Unique product code.</param>

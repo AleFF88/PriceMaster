@@ -22,6 +22,14 @@ namespace PriceMaster.Infrastructure.Repositories {
         }
 
         /// <inheritdoc />
+        public async Task<IEnumerable<Component>> GetComponentsByIdsAsync(IEnumerable<int> ids) {
+            return await _context.Components
+                .AsNoTracking()
+                .Where(c => ids.Contains(c.ComponentId))
+                .ToListAsync();
+        }
+
+        /// <inheritdoc />
         public async Task<Product?> GetByProductCodeWithBomAsync(string productCode) {
             return await _context.Products
                 .Include(p => p.BomItems)
