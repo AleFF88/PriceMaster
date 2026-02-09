@@ -17,7 +17,6 @@ namespace PriceMaster.Infrastructure {
             // Specialized read-only data retrieval (queties) for reports and complex views
             services.AddScoped<IProductionHistoryQueries, ProductionHistoryQueries>();
 
-
             return services;
         }
     }
