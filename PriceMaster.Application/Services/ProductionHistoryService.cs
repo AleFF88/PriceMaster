@@ -3,6 +3,7 @@ using PriceMaster.Application.Models;
 using PriceMaster.Application.Requests;
 using PriceMaster.Application.Validators;
 using PriceMaster.Domain.Entities;
+using PriceMaster.Domain.Enums;
 using PriceMaster.Domain.Interfaces;
 using PriceMaster.Domain.Reports;
 
@@ -47,7 +48,7 @@ namespace PriceMaster.Application.Services {
                 var totalPrice = Math.Ceiling(product.BomItems.Sum(i => i.Quantity * i.Component!.PricePerUnit));
 
                 var workCost = Math.Ceiling(product.BomItems
-                    .Where(i => i.Component!.CategoryId == 3)
+                    .Where(i => i.Component!.CategoryId == (int)CategoryType.AssemblyWork)
                     .Sum(i => i.Quantity * i.Component!.PricePerUnit));
 
                 var historyEntry = new ProductionHistory {
