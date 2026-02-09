@@ -4,7 +4,7 @@ using PriceMaster.Domain.Interfaces;
 using PriceMaster.Infrastructure.Repositories;
 
 namespace PriceMaster.Infrastructure {
-    public static class DependencyInjection {,
+    public static class DependencyInjection {
         /// Registers infrastructure services, repositories, and the database context.
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, Action<DbContextOptionsBuilder> configureDbContext) {
             // Configure the main database context with provided options
