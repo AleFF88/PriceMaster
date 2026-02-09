@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PriceMaster.Infrastructure;
 
-namespace PriceMaster.IntegrationTests {
+namespace PriceMaster.IntegrationTests.Infrastructure {
 
     /// <summary>
     /// Base class for integration tests providing a shared infrastructure.

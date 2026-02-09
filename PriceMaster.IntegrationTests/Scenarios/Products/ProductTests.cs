@@ -2,8 +2,10 @@
 using PriceMaster.Application.Services;
 using PriceMaster.Application.Validators;
 using PriceMaster.Infrastructure.Repositories;
+using PriceMaster.IntegrationTests.Infrastructure;
+using PriceMaster.IntegrationTests.Seeds;
 
-namespace PriceMaster.IntegrationTests {
+namespace PriceMaster.IntegrationTests.Scenarios.Products {
 
     [TestClass]
     public class ProductTests : IntegrationTestBase {

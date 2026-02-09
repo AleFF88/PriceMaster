@@ -5,7 +5,7 @@ using PriceMaster.Application.Services;
 using PriceMaster.Domain.Interfaces;
 using PriceMaster.Infrastructure;
 
-namespace PriceMaster.IntegrationTests {
+namespace PriceMaster.IntegrationTests.Scenarios.System {
     [TestClass]
     public class DependencyInjectionTests {
         /// <summary>

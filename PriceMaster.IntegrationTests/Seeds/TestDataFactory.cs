@@ -1,6 +1,6 @@
 ﻿using PriceMaster.Application.Requests;
 
-namespace PriceMaster.IntegrationTests {
+namespace PriceMaster.IntegrationTests.Seeds {
     /// <summary>
     /// Test data factory for simulating incoming Payload from API.
     /// </summary>

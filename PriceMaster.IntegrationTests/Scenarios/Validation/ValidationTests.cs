@@ -1,8 +1,8 @@
 ﻿using PriceMaster.Application.Requests;
 using PriceMaster.Application.Validators;
-using PriceMaster.IntegrationTests;
+using PriceMaster.IntegrationTests.Seeds;
 
-namespace PriceMaster.UnitTests {
+namespace PriceMaster.IntegrationTests.Scenarios.Validation {
     [TestClass]
     public class ValidationTests {
         private readonly CreateProductRequestValidator _productValidator = new();

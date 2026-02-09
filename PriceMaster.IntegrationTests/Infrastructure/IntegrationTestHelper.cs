@@ -1,6 +1,6 @@
 ﻿using PriceMaster.Infrastructure;
 
-namespace PriceMaster.IntegrationTests {
+namespace PriceMaster.IntegrationTests.Infrastructure {
     internal static class IntegrationTestHelper {
         /// <summary>
         /// Forces the EF Core Change Tracker to clear all tracked entities.

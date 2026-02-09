@@ -3,9 +3,11 @@ using PriceMaster.Application.Requests;
 using PriceMaster.Application.Services;
 using PriceMaster.Application.Validators;
 using PriceMaster.Infrastructure.Repositories;
-using static PriceMaster.IntegrationTests.IntegrationTestHelper;
+using PriceMaster.IntegrationTests.Infrastructure;
+using PriceMaster.IntegrationTests.Seeds;
+using static PriceMaster.IntegrationTests.Infrastructure.IntegrationTestHelper;
 
-namespace PriceMaster.IntegrationTests {
+namespace PriceMaster.IntegrationTests.Scenarios.ProductionHistory {
     /// <summary>
     /// Integration tests for the production history logic and reporting.
     /// These tests verify that production events are recorded with correct prices 
@@ -196,7 +198,7 @@ namespace PriceMaster.IntegrationTests {
             // 2. Act
             // Using the service which now returns a ServiceResult
             var result = await _historyService.AddProductionHistoryEntryAsync(request);
-            IntegrationTestHelper.ClearChangeTracker(Context);
+            ClearChangeTracker(Context);
 
             // 3. Assert
             Assert.IsTrue(result.IsSuccess, $"Service failed to create entry: {result.Message}");
