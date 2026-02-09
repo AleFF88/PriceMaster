@@ -46,6 +46,7 @@ namespace PriceMaster.IntegrationTests {
                 .FirstOrDefaultAsync(p => p.ProductCode == expectedProductCode);
 
             Assert.IsNotNull(productInDb, $"Product with code {expectedProductCode} must be in the database.");
+            Assert.AreEqual(dto.SeriesId, productInDb.SeriesId, "The SeriesId in the database must match the value from the request.");
             Assert.AreEqual(expectedSizeWidth, productInDb.SizeWidth);
             Assert.AreEqual(expectedSizeHeight, productInDb.SizeHeight);
             Assert.AreEqual(dto.RecommendedPrice, productInDb.RecommendedPrice);
