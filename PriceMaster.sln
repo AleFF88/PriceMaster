@@ -8,6 +8,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E7C2520C-C639-4952-BA8F-943C87EE14BE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{90E9E36C-B60E-45AE-81B7-79A97FF093DC}"
+	ProjectSection(SolutionItems) = preProject
+		Specification.txt = Specification.txt
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceMaster.Domain", "PriceMaster.Domain\PriceMaster.Domain.csproj", "{213B92ED-0609-4DFD-9B22-B3B53D13E703}"
 EndProject
