@@ -16,11 +16,6 @@ namespace PriceMaster.Infrastructure.Configurations {
             builder.HasIndex(u => u.UnitName)
                    .IsUnique();
 
-            builder.HasData(
-                new Unit { UnitId = 1, UnitName = "piece" },
-                new Unit { UnitId = 2, UnitName = "sq.m" }
-            );
-
             builder.HasMany(unit => unit.Components)
                    .WithOne(component => component.Unit)
                    .HasForeignKey(component => component.UnitId)

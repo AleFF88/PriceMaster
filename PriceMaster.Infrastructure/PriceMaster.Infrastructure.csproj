@@ -23,8 +23,4 @@
     <ProjectReference Include="..\PriceMaster.Domain\PriceMaster.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Configurations\" />
-  </ItemGroup>
-
 </Project>
