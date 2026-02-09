@@ -40,6 +40,7 @@ namespace PriceMaster.Infrastructure.Repositories {
         /// <inheritdoc />
         public async Task<IEnumerable<Product>> GetAllAsync() {
             return await _context.Products
+                .AsNoTracking()
                 .OrderBy(p => p.ProductCode)
                 .ToListAsync();
         }
