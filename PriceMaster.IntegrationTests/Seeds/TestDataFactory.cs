@@ -1,4 +1,5 @@
 ﻿using PriceMaster.Application.Requests;
+using PriceMaster.Domain.Enums;
 
 namespace PriceMaster.IntegrationTests.Seeds {
     /// <summary>
@@ -87,7 +88,7 @@ namespace PriceMaster.IntegrationTests.Seeds {
             SizeHeight = 30,
             RecommendedPrice = 1000,
             BomItems = new List<BomItemRequest> {
-                new() { ComponentId = 1, Quantity = 1 }
+                new() { ComponentId = (int)CategoryType.Artifact, Quantity = 1 }
             }
         };
     }
