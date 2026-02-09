@@ -6,13 +6,14 @@ using System.Reflection;
 namespace PriceMaster.Application {
 
     public static class DependencyInjection {
+        /// Registers application-level services and validators into the dependency injection container.
         public static IServiceCollection AddApplication(this IServiceCollection services) {
 
-            // SERVICES
+            // Register business logic services with scoped lifetime
             services.AddScoped<ProductService>();
             services.AddScoped<ProductionHistoryService>();
 
-            // VALIDATORS
+            // Automatically discover and register all FluentValidation validators in this assembly
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             return services;
